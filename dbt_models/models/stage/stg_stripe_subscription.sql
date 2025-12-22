@@ -13,4 +13,4 @@ with stripe_sub as (
     from {{source('mysql_raw_data','stripe_subscriptions')}}
 )
 
-select * from stripe_sub
+select * from stripe_sub 
