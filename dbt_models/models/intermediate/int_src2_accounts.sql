@@ -3,7 +3,7 @@ with src2 as (
             account_id,
             user_id,
             concat('XXXX', right(account_number, 4)) as account_number_last4,
-            account_type,
+            {{account_type_normalization('account_type')}} as account_type,
             current_balance,
             ifnull(available_balance,0) as available_balance,
             (current_balance-available_balance) as balance_diffrence,
