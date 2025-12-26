@@ -10,11 +10,7 @@ with src1 as (
           available_balance,
           (balance-available_balance) as balance_diffrence,
           ifnull(available_credit, 0) as available_credit,
-          cast(case 
-                   when (balance + available_credit) > 0 
-                   then (balance / (balance + available_credit)) 
-                   else 0 
-               end as number(10,2)) as credit_utilization_pct,
+          (balance/nullif(balance + available_credit, 0))::number(10,4) as credit_utilization_ratio,
           currency,
           balance_date,
           datediff('day', balance_date, current_date()) as days_since_balance_check,
