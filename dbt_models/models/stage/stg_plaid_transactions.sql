@@ -1,6 +1,6 @@
 with plaid_transactions as (
     select
-          acc.value:account_id::varchar(50)                           as acccount_id,
+          acc.value:account_id::varchar(50)                           as account_id,
           txt.value:transaction_id::varchar(100)                      as transaction_id,
           txt.value:amount::number(20,2)                              as amount,
           {{convert_date('txt.value:authorized_date::varchar(100)')}} as authorized_date,
