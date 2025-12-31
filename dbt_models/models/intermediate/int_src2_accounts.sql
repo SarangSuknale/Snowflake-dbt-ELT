@@ -18,10 +18,12 @@ with src2 as (
                 then True
                 else False
             end as is_data_stale,
+            created_date,
             datediff('day', created_date, current_date()) as account_age_in_days,
             datediff('month', created_date, current_date()) as account_age_in_months,
             aggregation_source,
-            last_updated
+            last_updated,
+            'source 2' as account_src
         from {{ref('stg_plaid_accounts')}}
 )
 

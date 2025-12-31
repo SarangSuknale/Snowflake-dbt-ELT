@@ -26,7 +26,8 @@ with src1 as (
           created_date,
           datediff('day', created_date, current_date()) as account_age_in_days,
           datediff('month', created_date, current_date()) as account_age_in_months,
-          last_updated
+          last_updated,
+          'source 1' as account_src
     from {{ref('stg_finicity_accounts')}}
 )
 
