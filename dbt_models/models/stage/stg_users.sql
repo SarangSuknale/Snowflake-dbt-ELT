@@ -4,7 +4,7 @@ with users as (
           full_name,
           email,
           gender,
-          {{convert_date('date_of_birth')}}          as data_of_birth,
+          {{convert_date('date_of_birth')}}          as date_of_birth,
           is_active,
           country,
           state,
