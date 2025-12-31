@@ -1,7 +1,7 @@
 with src1 as (
     select
           transaction_id,
-          acccount_id,
+          account_id,
           user_id,
           transaction_date,
           datediff('month', transaction_date, current_date()) as transaction_age_in_months,
@@ -15,7 +15,8 @@ with src1 as (
           post_date,
           transaction_status,
           transaction_modified,
-          updated_on
+          updated_on,
+          'source 1' as txt_src
     from {{ref('stg_finicity_transactions')}}
 )
 

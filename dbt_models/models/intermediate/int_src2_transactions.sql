@@ -10,7 +10,8 @@ with src2_txt as (
           regexp_replace(category, '[^[:alpha:]& ]', '') as category,
           merchant_name as merchant,
           payment_channel,
-          is_pending
+          is_pending,
+          'Source 2' as txt_src
     from {{ref('stg_plaid_transactions')}}
 )
 

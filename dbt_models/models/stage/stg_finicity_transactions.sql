@@ -1,6 +1,6 @@
 with finicity_transactions as (
     select
-           acc.value:account_id::varchar(100)                                      as acccount_id,
+           acc.value:account_id::varchar(100)                                      as account_id,
            variant_col:user_id::varchar(100)                                       as user_id,
            txt.value:id::varchar(100)                                              as transaction_id,
            {{convert_date('txt.value:transaction_date::varchar(100)')}}            as transaction_date,
