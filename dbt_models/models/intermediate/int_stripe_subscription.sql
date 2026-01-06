@@ -11,11 +11,11 @@ with subscription as (
           case
               when current_date() < current_period_end then datediff('day', current_date(), current_period_end)
               else 0
-           end as current_period_remaining_days,
+          end as current_period_remaining_days,
           case
               when current_date() < current_period_end then datediff('month', current_date(), current_period_end)
               else 0
-           end as current_period_remaining_months,
+          end as current_period_remaining_months,
           created_date
     from {{ref('stg_stripe_subscription')}}
 )
