@@ -6,6 +6,8 @@ with price as (
           price,
           currency,
           interval,
+          interval = 'month' as is_monthly,
+          interval = 'year' as is_annual,
           is_active,
           created_date as last_price_updated,
           datediff('day', created_date, current_date()) as days_since_price_updated,
