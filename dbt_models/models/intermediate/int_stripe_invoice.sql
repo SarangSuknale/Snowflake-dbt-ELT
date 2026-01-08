@@ -4,7 +4,7 @@ with invoice as (
           customer_id,
           object,
           subscription_id,
-          amount_due,
+          amount_due as amount,
           currency,
           status,
           created_date,
