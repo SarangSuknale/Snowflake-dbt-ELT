@@ -1,0 +1,117 @@
+version: 2
+
+models:
+  - name: stg_yodlee_accounts
+    description: >
+      Staging model for Yodlee account data. This model contains cleaned,
+      type-casted account records ingested from the Yodlee API. It reflects
+      source-level account attributes and balances.
+
+    meta:
+      owner: data-Sarang
+      source_system: yodlee
+      pii: true
+      grain: one row per account per ingestion
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the Yodlee account.
+        tests:
+          - not_null
+
+      - name: user_id
+        description: Unique identifier of the user who owns the account.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: provider_account_id
+        description: Account identifier assigned by the financial institution.
+
+      - name: account_name
+        description: Name of the account as provided by Yodlee.
+
+      - name: account_type
+        description: Type of account (e.g., checking, savings, credit).
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['BANK', 'CREDIT_CARD', 'LOAN', 'INVESTMENT']
+              severity: warn
+
+      - name: account_status
+        description: Current status of the account (active, inactive, closed).
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['ACTIVE', 'INACTIVE', 'CLOSED']
+              severity: warn
+
+      - name: account_number
+        description: Bank account number associated with the account.
+        tests:
+          - not_null
+
+      - name: routing_number
+        description: Routing number of the financial institution.
+
+      - name: iban
+        description: International Bank Account Number, if available.
+
+      - name: bic
+        description: Bank Identifier Code (SWIFT/BIC).
+
+      - name: current_balance
+        description: Current balance of the account.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -100000000
+                max_value: 100000000
+              severity: warn
+
+      - name: available_balance
+        description: Available balance that can be withdrawn or spent.
+
+      - name: currency
+        description: ISO currency code of the account balance.
+        tests:
+          - not_null
+
+      - name: balance_date
+        description: Date when the balance was last reported by Yodlee.
+
+      - name: displayed_name
+        description: User-friendly display name of the account.
+
+      - name: account_holder_name
+        description: Name of the primary account holder.
+
+      - name: is_asset
+        description: Flag indicating whether the account represents an asset.
+
+      - name: is_manual
+        description: Flag indicating whether the account was manually added.
+
+      - name: aggregation_source
+        description: Source through which the account was aggregated.
+
+      - name: created_date
+        description: Timestamp when the account record was created in Yodlee.
+        tests:
+          - not_null
+
+      - name: last_updated
+        description: Timestamp when the account record was last updated.
+
+      - name: container
+        description: Account container category (banking, credit, investment).
+
+      - name: provider_name
+        description: Name of the account data provider.
+
+      - name: provider_id
+        description: Identifier of the account data provider.
