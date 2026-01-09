@@ -1,0 +1,91 @@
+version: 2
+
+models:
+  - name: int_stripe_subscription
+    description: >
+              This intermediate model represents Stripe subscription data enriched
+              with lifecycle and status indicators. Each record corresponds to a
+              customer subscription and includes period timing, activity flags,
+              expiration indicators, and remaining period metrics to support
+              subscription lifecycle, churn, and revenue analysis.
+
+    tags:
+      - stripe
+      - subscriptions
+      - intermediate
+
+    meta:
+      owner: Sarang Suknale
+      domain: billing
+      source_system: stripe
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: subscription_id
+        description: Unique identifier for the Stripe subscription.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Identifier of the Stripe customer associated with the subscription.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_stripe_customers')
+                field: customer_id
+
+      - name: price_id
+        description: Identifier of the Stripe price associated with the subscription.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('int_stripe_products')
+                field: price_id
+
+      - name: quantity
+        description: Quantity of the subscribed product.
+
+      - name: status
+        description: Current status of the subscription (e.g., active, canceled, past_due).
+
+      - name: is_active_subscription
+        description: Indicates whether the subscription is currently active.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE
+                  - FALSE
+
+      - name: current_period_start
+        description: Start timestamp of the current billing period.
+        tests:
+          - not_null
+
+      - name: current_period_end
+        description: End timestamp of the current billing period.
+        tests:
+          - not_null
+
+      - name: is_expired
+        description: Indicates whether the subscription has expired.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE
+                  - FALSE
+
+      - name: current_period_remaining_days
+        description: Number of days remaining in the current billing period.
+
+      - name: current_period_remaining_months
+        description: Number of months remaining in the current billing period.
+
+      - name: created_date
+        description: Timestamp when the subscription was created.
+        tests:
+          - not_null

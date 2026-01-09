@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: int_stripe_products
+    description: >
+              This intermediate model represents Stripe products enriched with pricing
+              details and lifecycle metrics. It combines product and price information
+              into a single, analytics-ready view to support subscription analysis,
+              revenue reporting, and product performance tracking.
+
+    tags:
+      - stripe
+      - products
+      - pricing
+      - intermediate
+
+    meta:
+      owner: Sarang Suknale
+      domain: billing
+      source_system: stripe
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: price_id
+        description: Unique identifier for the Stripe price.
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        description: Identifier of the Stripe product associated with the price.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_products')
+                field: product_id
+
+      - name: product_price
+        description: Price amount for the product.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code in which the product price is denominated.
+
+      - name: interval
+        description: Billing interval for the product price (e.g., month, year).
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - month
+                  - year
+
+      - name: is_price_active
+        description: Indicates whether the price is currently active.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE
+                  - FALSE
+
+      - name: last_price_updated
+        description: Timestamp when the price was last created or updated.
+        tests:
+          - not_null
+
+      - name: days_since_price_updated
+        description: Number of days since the price was last updated.
+
+      - name: months_since_price_updated
+        description: Number of months since the price was last updated.
+
+      - name: product_name
+        description: Name of the Stripe product.
+
+      - name: product_description
+        description: Description of the Stripe product.
+
+      - name: is_product_active
+        description: Indicates whether the product is currently active.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE
+                  - FALSE
+
+      - name: product_created_date
+        description: Timestamp when the product was created.
+        tests:
+          - not_null
+
+      - name: days_since_product_created
+        description: Number of days since the product was created.
+
+      - name: months_since_product_created
+        description: Number of months since the product was created.

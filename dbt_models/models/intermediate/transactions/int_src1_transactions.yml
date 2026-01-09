@@ -1,0 +1,125 @@
+
+models:
+  - name: int_src1_transactions
+    description: >
+                This intermediate model contains normalized transaction data sourced
+                from Source 1. Each record represents a single financial transaction
+                associated with a user account. The model standardizes transaction
+                attributes, adds derived fields such as transaction age, and prepares
+                the data for downstream transaction-level marts and analytics.
+
+    tags:
+      - transactions
+      - intermediate
+      - finicity
+
+    meta:
+      owner: Sarang Suknale
+      domain: transactions
+      source_system: finicity
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier for the transaction as provided by Finicity.
+        tests:
+          - not_null
+
+      - name: account_id
+        description: Identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_accounts')
+                field: account_id
+
+      - name: user_id
+        description: Identifier of the user who owns the account and transaction.
+        meta:
+          pii: true
+          sensitivity: high
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: transaction_date
+        description: Date on which the transaction occurred.
+        tests:
+          - not_null
+
+      - name: transaction_age_in_months
+        description: Number of months elapsed since the transaction date.
+
+      - name: amount
+        description: Monetary amount of the transaction.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code in which the transaction was recorded.
+
+      - name: category
+        description: Category assigned to the transaction by Finicity.
+
+      - name: merchant
+        description: Merchant name associated with the transaction.
+
+      - name: is_manually_added
+        description: Indicates whether the transaction was manually added by the user.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: is_recurring
+        description: Indicates whether the transaction is part of a recurring series.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: is_verified
+        description: Indicates whether the transaction has been verified by the provider.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: post_date
+        description: Date when the transaction was posted to the account.
+
+      - name: transaction_status
+        description: Current status of the transaction.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - reconciled
+                  - pending
+                  - posted
+              severity: warn
+
+      - name: transaction_modified
+        description: Indicates whether the transaction details have been modified after creation.
+
+      - name: updated_on
+        description: Timestamp when the transaction record was last updated.
+
+      - name: txt_src
+        description: Source identifier indicating the transaction provider.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - source 1

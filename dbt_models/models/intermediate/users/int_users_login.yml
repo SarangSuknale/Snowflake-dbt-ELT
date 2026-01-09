@@ -1,10 +1,9 @@
 
 models:
-  - name: stg_users_login
+  - name: int_users_login
     description: >
-                This staging model contains user login activity data sourced from the
-                MySQL user_logins table. Each row represents a single login session
-                for a user, including login and logout times, session duration,
+                This intermediate model contains user login activity data. Each row represents a single 
+                login session for a user, including login and logout times, session duration,
                 IP address details, device information, and browser metadata.
                 The data is used for user activity analysis and security monitoring.
     meta:
@@ -13,6 +12,7 @@ models:
       tags: ['users', 'logins', 'user_login']
       source_system: MySQL
       refresh_frequency: Daily
+      maturity: intermediate
 
     columns:
       - name: login_id 
@@ -40,6 +40,9 @@ models:
 
       - name: time_spend_in_seconds
         description: Total duration of the login session in seconds.
+
+      - name: time_spend_in_minutes
+        description: Total duration of the login session in minutes.
 
       - name: login_local_ip_address
         description: Local IP address recorded at the time of login.
