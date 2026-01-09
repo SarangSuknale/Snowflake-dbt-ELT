@@ -1,0 +1,127 @@
+
+models:
+  - name: stg_finicity_transactions
+    description: >
+                 This is the stage table for Finicity Transactions API data. It includes transaction 
+                 details such as amount, category, merchant, transaction dates, alert indicators, 
+                 and status information. The data is primarily used for transaction reporting, 
+                 alerts tracking, and behavioral analysis.
+
+    meta:
+      owner: Sarang Suknale
+      domain: Transactions
+      source_system: AWS
+      refresh_frequency: Daily
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_finicity_accounts')
+                field: account_id
+      
+      - name: user_id
+        description: Unique identifier of the user who owns the account.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: transaction_id
+        description: Unique identifier for each transaction.
+        tests:
+          - not_null
+
+      - name: transaction_date
+        description: Date when the transaction occurred.
+        tests:
+          - not_null
+        severity: warn
+
+      - name: amount
+        description: Transaction amount recorded for the transaction.
+        tests:
+          - not_null
+        
+      - name: category
+        description: Original category assigned to the transaction.
+
+      - name: merchant
+        description: Merchant name where the transaction took place.
+
+      - name: currency
+        description: Currency code in which the transaction amount is recorded.
+
+      - name: daily_alert_email_sent
+        description: Indicates whether a daily alert email was sent for this transaction.
+
+      - name: daily_alert_email_sent_date
+        description: Date when the daily alert email was sent.
+
+      - name: daily_alert_sent
+        description: Indicates whether a daily transaction alert was sent.
+
+      - name: daily_alert_sent_date
+        description: Date when the daily transaction alert was sent.
+
+      - name: description
+        description: Free-text description provided for the transaction.
+
+      - name: is_manually_added
+        description: Indicates whether the transaction was manually added by the user.
+
+      - name: is_recurring
+        description: Indicates whether the transaction is identified as recurring.
+
+      - name: is_verified
+        description: Indicates whether the transaction has been verified by user.
+
+      - name: memo
+        description: Optional user-entered note or memo for the transaction.
+
+      - name: modified_category
+        description: Category updated or overridden by the user.
+
+      - name: modified_merchant
+        description: Merchant name updated or overridden by the user.
+
+      - name: post_date
+        description: Date when the transaction was posted by the financial institution.
+
+      - name: transaction_status
+        description: Current status of the transaction.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - reconciled
+                  - pending
+                  - posted
+              severity: warn
+
+      - name: tag
+        description: Tags associated with the transaction for categorization or filtering.
+
+      - name: transaction_modified
+        description: Indicates whether the transaction details were modified after creation.
+
+      - name: type
+        description: Type of transaction, such as debit or credit.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - credit
+                  - debit
+              severity: warn
+
+      - name: updated_on
+        description: Timestamp when the transaction record was last updated.
+
+      - name: was_pending
+        description: Indicates whether the transaction was previously in a pending state.

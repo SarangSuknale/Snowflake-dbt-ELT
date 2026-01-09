@@ -1,0 +1,81 @@
+
+models:
+  - name: stg_plaid_transactions
+    description: >
+                This model contains transactional data sourced from Plaid, with one row per
+                transaction per account. It includes transaction amounts, dates, merchant
+                details, category information, and payment attributes. The data is used for
+                transaction analysis, categorization, and financial reporting.
+    
+    meta:
+      owner: Sarang Suknale
+      domain: Transactions
+      tags: ['Plaid', 'Transactions']
+      source_system: AWS
+      refresh_frequency: Daily
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_plaid_accounts')
+                field: account_id
+      
+      - name: transaction_id
+        description: Unique identifier for each Plaid transaction.
+        tests:
+          - not_null
+
+      - name: amount
+        description: Transaction amount recorded for the transaction.
+        tests:
+          - not_null
+
+      - name: authorized_date
+        description: Date when the transaction was authorized.
+
+      - name: category
+        description: High-level category assigned to the transaction.
+
+      - name: category_id
+        description: Identifier for the transaction category assigned.
+
+      - name: transaction_date
+        description: Date when the transaction was posted or occurred.
+        tests:
+          - not_null
+
+      - name: currency
+        description: ISO currency code for the transaction amount.
+
+      - name: item_id
+        description: Identifier of the Plaid item associated with the transaction.
+
+      - name: merchant_name
+        description: Name of the merchant associated with the transaction.
+
+      - name: merchant_type
+        description: Type or classification of the merchant, if provided by Plaid.
+
+      - name: name
+        description: Raw transaction name or description as provided by Plaid.
+
+      - name: payment_channel
+        description: Channel through which the payment was made, such as online or in store.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - online
+                  - in store
+                  - other
+              severity: warn
+
+      - name: is_pending
+        description: Indicates whether the transaction is currently pending.
+
+      - name: transaction_type
+        description: Type of transaction, such as place, digital, or special.

@@ -1,0 +1,61 @@
+
+models:
+  - name: stg_stripe_subscription
+    description: >
+                This staging model contains subscription data sourced from Stripe.
+                Each row represents a single customer subscription and includes
+                subscription status, associated customer and price details,
+                billing period information, quantity, and environment indicators.
+                The model is used for subscription lifecycle and recurring revenue analysis.
+
+    columns:
+      - name: subscription_id
+        description: Unique identifier for the subscription in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: object
+        description: Type of Stripe object returned by the API, typically "subscription".
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer associated with the subscription.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_customers')
+                field: customer_id
+
+      - name: price_id
+        description: Identifier of the Stripe price associated with the subscription.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_price')
+                field: price_id
+
+      - name: quantity
+        description: Number of units or seats included in the subscription.
+
+      - name: status
+        description: Current status of the subscription, such as active, past_due, or canceled.
+
+      - name: current_period_start
+        description: Timestamp when the current billing period started.
+        tests:
+          - not_null
+
+      - name: current_period_end
+        description: Timestamp when the current billing period is scheduled to end.
+        tests:
+          - not_null
+
+      - name: created_date
+        description: Timestamp when the subscription was created in Stripe.
+        tests:
+          - not_null
+
+      - name: livemode
+        description: Indicates whether the subscription exists in live mode or test mode.

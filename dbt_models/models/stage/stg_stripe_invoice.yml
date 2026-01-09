@@ -1,0 +1,62 @@
+
+models:
+  - name: stg_stripe_invoice
+    description: >
+              This staging model contains invoice data sourced from Stripe.
+              Each row represents a single invoice generated for a customer
+              and subscription. It includes invoice amounts, currency,
+              status, creation timestamp, and environment information.
+              The model is used for billing, invoicing, and revenue analysis.
+    meta:
+      owner: Sarang Suknale
+      domain: Payment
+      source_system: Stripe
+      tags: ['stripe', 'invoice']
+      refresh_frequency: Daily
+
+    columns:
+      - name: invoice_id
+        description: Unique identifier for the invoice in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: object
+        description: Type of Stripe object returned by the API, typically "invoice".
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer associated with the invoice.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_customers')
+                field: customer_id
+
+      - name: subscription_id
+        description: Identifier of the Stripe subscription associated with the invoice.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_subscription')
+                field: subscription_id
+
+      - name: amount_due
+        description: Total amount due for the invoice in the specified currency.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code for the invoice amount.
+
+      - name: status
+        description: Current status of the invoice, such as draft, open, paid, or void.
+
+      - name: created_date
+        description: Timestamp when the invoice was created in Stripe.
+        tests:
+          - not_null
+
+      - name: livemode
+        description: Indicates whether the invoice was created in live mode or test mode.
