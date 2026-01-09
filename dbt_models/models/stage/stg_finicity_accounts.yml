@@ -1,0 +1,160 @@
+models:
+  - name: stg_finicity_accounts
+    description: This is the stage table for Finicity Accounts API data. All the raw data pulled
+                 from API, stored in this table after standardized it by changing data type, column names, etc.
+    
+    meta: 
+        owner: Sarang
+        domain: Account
+        source_system: Finicity
+        pii: True
+        refresh_requency: Daily
+
+    columns:
+      - name: account_id
+        description: Unique identifier of account (Primary key).
+        tests:
+          - not_null
+
+      - name: user_id
+        description: Unique identifier of user who own the account.
+        tests:
+          - not_null
+          - relationships:
+             arguments:
+               field: user_id
+               to: ref('stg_users')
+
+      - name: account_number
+        description: Account number associated with the financial account.
+        tests:
+          - not_null
+        meta:
+          pii: True
+
+      - name: account_name
+        description: Name of the financial account
+
+      - name: display_name
+        description: User-friendly display name for the account.
+
+      - name: account_type
+        description: High-level type of the account (e.g., checking, savings, credit).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - savings
+                  - checking
+                  - loan
+                  - credit
+                  - investment
+              severity: warn
+
+      - name: account_subtype
+        description: More specific classification of the account type.
+
+      - name: institution_id
+        description: Identifier of the financial institution providing the account.
+
+      - name: institution_login_id
+        description: Identifier for the institution login session associated with the account.
+
+      - name: account_status
+        description: Current status of the account (e.g., active, inactive, closed).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:  
+                values:
+                  - pending
+                  - active
+                  - error
+                  - closed
+
+      - name: balance
+        description: Current total balance of the account.
+        meta:
+          unit: currency
+          financial_metric: True
+
+      - name: available_balance
+        description: Available balance that can be withdrawn or used.
+        meta:
+          unit: currency
+          financial_metric: True
+
+      - name: available_credit
+        description: Available credit amount for credit-based accounts.
+        meta:
+          unit: currency
+          financial_metric: True
+
+      - name: balance_date
+        description: Date and time when the balance was last updated by the institution.
+
+      - name: aggregation_success_date
+        description: Timestamp of the last successful data aggregation for the account.
+
+      - name: aggregation_attempt_date
+        description: Timestamp of the most recent aggregation attempt.
+
+      - name: created_date
+        description: Timestamp when the account record was first created in the source system.
+
+      - name: currency
+        description: ISO currency code associated with the account (e.g., USD).
+        tests:
+          - not_null
+
+      - name: routing_number
+        description: Routing number associated with the account, if applicable.
+        meta:
+          pii: True
+
+      - name: iban
+        description: International Bank Account Number for the account, if available.
+        meta:
+          pii: True
+
+      - name: bic
+        description: Bank Identifier Code associated with the account.
+        meta:
+          pii: True
+
+      - name: last_updated
+        description: Timestamp when the account record was last updated in the source.
+
+      - name: interest_rate
+        description: Interest rate applied to the account, if applicable.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+              severity: warn
+
+      - name: loan_term
+        description: Loan term details for loan-based accounts.
+
+      - name: maturity_date
+        description: Date when the loan or financial product reaches maturity.
+
+      - name: original_loan_amount
+        description: Original principal amount of the loan.
+
+      - name: current_balance
+        description: Current outstanding balance of the account.
+
+      - name: payment_amount
+        description: Scheduled payment amount for loan or credit accounts.
+
+      - name: last_payment_amount
+        description: Amount of the most recent payment made on the account.
+
+      - name: last_payment_date
+        description: Date of the most recent payment.
+
+      - name: next_payment_date
+        description: Date when the next payment is due

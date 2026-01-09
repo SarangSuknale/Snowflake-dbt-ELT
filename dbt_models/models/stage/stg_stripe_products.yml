@@ -1,0 +1,44 @@
+
+models:
+  - name: stg_stripe_products
+    description: >
+                This staging model contains product data sourced from Stripe.
+                Each row represents a single product configured in Stripe and
+                includes product name, description, active status, creation date,
+                and environment information. The model is used to support pricing,
+                subscriptions, and product-level revenue analysis.
+    meta:
+      owner: Sarang Suknale
+      domain: payment
+      source_system: Stripe
+      tags: ['stripe', 'product']
+      refresh_frequency: Daily
+
+    columns:
+      - name: product_id
+        description: Unique identifier for the product in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: object
+        description: Type of Stripe object returned by the API, typically "product".
+
+      - name: product_name
+        description: Name of the product as defined in Stripe.
+        tests:
+          - not_null
+
+      - name: product_description
+        description: Description of the product as defined in Stripe.
+
+      - name: is_active
+        description: Indicates whether the product is currently active and available for use.
+
+      - name: created_date
+        description: Timestamp when the product was created in Stripe.
+        tests:
+          - not_null
+
+      - name: livemode
+        description: Indicates whether the product exists in live mode or test mode.

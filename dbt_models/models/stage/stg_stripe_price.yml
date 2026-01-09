@@ -1,0 +1,54 @@
+
+models:
+  - name: stg_stripe_price
+    description: >
+                This staging model contains pricing data sourced from Stripe.
+                Each row represents a single price configuration associated with
+                a Stripe product. It includes pricing amount, billing interval,
+                currency, active status, and creation timestamp. The model is used
+                to support subscription pricing and revenue analysis.
+    meta:
+      owner: Sarang Suknale
+      domain: payment
+      source_system: Stripe
+      tags: ['stripe', 'price']
+      refresh_frequency: Daily
+
+
+    columns:
+      - name: price_id
+        description: Unique identifier for the price in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: object
+        description: Type of Stripe object returned by the API, typically "price".
+
+      - name: product_id
+        description: Unique identifier of the Stripe product associated with the price.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_products')
+                field: product_id
+
+      - name: price
+        description: Unit price amount for the product, in the specified currency.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code for the price amount.
+
+      - name: interval
+        description: Billing interval for the price, such as month or year.
+
+      - name: is_active
+        description: Indicates whether the price is currently active and available for use.
+
+      - name: created_date
+        description: Timestamp when the price was created in Stripe.
+        tests:
+          - not_null

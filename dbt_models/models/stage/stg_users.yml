@@ -1,0 +1,95 @@
+
+models:
+  - name: stg_users
+    description: >
+                This staging model contains user profile and account information. 
+                Each row represents a single user and includes personal details, contact information, 
+                account status, alert preferences,and membership lifecycle timestamps. The model is 
+                prepared for use in downstream user and membership analytics.
+    meta:
+      owner: Sarang Suknale
+      domain: Users 
+      tags: ['users']
+      source_system: MySQL
+
+    columns:
+      - name: user_id
+        description: Unique identifier for the user.
+        tests:
+          - not_null
+          - unique
+      
+      - name: full_name
+        description: Full name of the user as provided during registration.
+
+      - name: email
+        description: Email address associated with the user account.
+        tests:
+          - not_null
+        meta:
+          pii: True
+
+      - name: gender
+        description: Gender of the user, if provided.
+        meta:
+          pii: True
+
+      - name: date_of_birth
+        description: Date of birth of the user.
+        meta: 
+          pii: True
+
+      - name: is_active
+        description: Indicates whether the user account is currently active.
+
+      - name: country
+        description: Country where the user is located.
+
+      - name: state
+        description: State or region where the user is located.
+
+      - name: city
+        description: City where the user is located.
+
+      - name: street
+        description: Street address of the user.
+
+      - name: postal_code
+        description: Postal or ZIP code associated with the user address.
+
+      - name: mobile_number
+        description: Mobile phone number associated with the user account.
+        meta:
+          pii: True
+
+      - name: signup_timestamp
+        description: Timestamp when the user signed up for the platform.
+        tests:
+          - not_null
+
+      - name: trail_start
+        description: Timestamp when the user's trial period started.
+
+      - name: trail_end
+        description: Timestamp when the user's trial period ended.
+
+      - name: membership_start
+        description: Timestamp when the user's paid membership started.
+
+      - name: membership_end
+        description: Timestamp when the user's membership ended or is scheduled to end.
+
+      - name: membership_plan
+        description: Membership plan selected by the user.
+
+      - name: email_alerts
+        description: Indicates whether the user has enabled email alerts.
+
+      - name: text_alerts
+        description: Indicates whether the user has enabled text message alerts.
+
+      - name: is_verified
+        description: Indicates whether the user account has been verified.
+
+      - name: is_email_verified
+        description: Indicates whether the user's email address has been verified.

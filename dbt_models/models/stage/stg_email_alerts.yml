@@ -1,0 +1,69 @@
+
+models:
+  - name: stg_email_alerts
+    description: >
+                This staging model contains records of email alerts sent to users.
+                Each row represents a single email alert event, including alert type,
+                delivery details, message content, and status.
+    meta:
+      owner: Sarang Suknale
+      domain: Alerts
+      source_system: MySQL
+      tags: ['alerts', 'email alerts']
+
+    columns:
+      - name: id 
+        description: Unique identifier for the email alert record.
+        tests: 
+          - not_null
+          - unique
+      
+      - name: user_id
+        description: Unique identifier of the user who received the email alert.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: email
+        description: Email address to which the alert was sent.
+        tests:
+          - not_null
+
+      - name: alert_type
+        description: Type of alert that was sent, such as transaction or balance alert.
+
+      - name: alert_name
+        description: Name or label of the alert configuration.
+
+      - name: alert_sent_date
+        description: Date when the email alert was sent.
+        tests:
+          - not_null
+
+      - name: alert_sent_frequency
+        description: Frequency at which the alert is configured to be sent.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - once
+                  - daily 
+                  - weekly
+                  - monthly
+
+      - name: message_id
+        description: Identifier of the email message used for tracking or delivery status.
+
+      - name: mail_subject
+        description: Subject line of the email alert.
+
+      - name: mail_body
+        description: Body content of the email alert message.
+
+      - name: status
+        description: Current status of the email alert, such as sent, failed, or queued.
+        

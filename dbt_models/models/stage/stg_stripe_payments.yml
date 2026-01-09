@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: stg_stripe_payments
+    description: >
+              This staging model contains payment data sourced from Stripe.
+              Each row represents a single payment transaction and includes
+              payment amounts, currency, associated customer and payment method,
+              payment status, creation timestamp, and environment information.
+              The model is used for payment tracking and billing analysis.
+    meta:
+      owner: Sarang Suknale
+      domain: Payment
+      source_system: Stripe
+      tags: ['stripe', 'payment']
+      refresh_frequency: Daily
+
+    columns:
+      - name: payment_id
+        description: Unique identifier for the payment in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: object
+        description: Type of Stripe object returned by the API, typically "payment_intent" or "charge".
+
+      - name: amount
+        description: Total amount of the payment in the specified currency.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code for the payment amount.
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer associated with the payment.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_customers')
+                field: customer_id
+
+      - name: payment_method_id
+        description: Identifier of the payment method used for the payment.
+        tests:
+          - relationships: 
+              arguments:
+                field: payment_method_id
+                to: ref('stg_stripe_payment_methods')
+
+      - name: status
+        description: Current status of the payment, such as succeeded, pending, or failed.
+
+      - name: created_date
+        description: Timestamp when the payment was created in Stripe.
+        tests:
+          - not_null
+
+      - name: livemode
+        description: Indicates whether the payment was created in live mode or test mode.

@@ -10,7 +10,7 @@ with acc_txt_summary as (
           sum(case when amount < 0 then abs(amount) else 0 end) as total_debits,
           sum(case when amount > 0 then abs(amount) else 0 end) as total_credits,
           avg(abs(amount))::number(10,2) as avg_txt_amount
-    from {{'int_transactions'}}
+    from {{ref('int_transactions')}}
     group by account_id
 )
 

@@ -1,0 +1,111 @@
+
+models:
+  - name: stg_yodlee_transactions
+    description: >
+              This staging model contains transaction data sourced from Yodlee, with one
+              row per transaction. It includes transaction amounts, dates,
+              categorization details, merchant information, balances, and transaction
+              status fields. The data is prepared for downstream transaction analysis,
+              reconciliation, and reporting.
+    meta:
+      owner: Sarang Suknale
+      domain: Transaction
+      tags: ['yodlee','transactions']
+      source_system: AWS
+      refresh_frequency: Daily
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account associated with the transaction.
+        tests:
+          - not_null
+
+      - name: transaction_id
+        description: Unique identifier for the Yodlee transaction.
+        tests:
+          - not_null
+
+      - name: amount
+        description: Transaction amount recorded for the transaction.
+        tests:
+          - not_null
+
+      - name: base_type
+        description: Base transaction type indicating debit or credit.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - CREDIT 
+                  - DEBIT 
+              severity: warn
+
+      - name: category
+        description: Category assigned to the transaction by Yodlee.
+
+      - name: category_id
+        description: Identifier for the transaction category.
+
+      - name: category_source
+        description: Source from which the transaction category was derived.
+
+      - name: category_type
+        description: High-level category type associated with the transaction.
+
+      - name: container
+        description: Financial container type, such as bank, credit, or investment.
+
+      - name: coupon_number
+        description: Coupon or reference number associated with the transaction, if available.
+
+      - name: created_date
+        description: Date when the transaction record was created in Yodlee.
+        tests:
+          - not_null
+
+      - name: description
+        description: Description or narration provided for the transaction.
+
+      - name: is_manual
+        description: Indicates whether the transaction was manually added.
+
+      - name: is_physical
+        description: Indicates whether the transaction was made using a physical card.
+
+      - name: last_updated
+        description: Timestamp when the transaction was last updated in Yodlee.
+
+      - name: memo
+        description: Optional user-provided note or memo for the transaction.
+
+      - name: merchant
+        description: Merchant name associated with the transaction.
+
+      - name: parentCategoryId
+        description: Identifier of the parent category associated with the transaction.
+
+      - name: post_date
+        description: Date when the transaction was posted by the financial institution.
+
+      - name: running_balance
+        description: Account balance after the transaction was applied.
+
+      - name: source_id
+        description: Identifier of the source system or account for the transaction.
+
+      - name: source_type
+        description: Type of source from which the transaction originated.
+
+      - name: status
+        description: Current status of the transaction, such as posted or pending.
+
+      - name: sub_type
+        description: Sub-type classification of the transaction.
+
+      - name: transaction_date
+        description: Date when the transaction occurred.
+        tests:
+          - not_null
+
+      - name: type
+        description: Transaction type classification provided by Yodlee.

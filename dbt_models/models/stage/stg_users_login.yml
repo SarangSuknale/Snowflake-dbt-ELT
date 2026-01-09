@@ -1,0 +1,60 @@
+
+models:
+  - name: stg_users_login
+    description: >
+                This staging model contains user login activity data sourced from the
+                MySQL user_logins table. Each row represents a single login session
+                for a user, including login and logout times, session duration,
+                IP address details, device information, and browser metadata.
+                The data is used for user activity analysis and security monitoring.
+    meta:
+      owner: Sarang Suknale
+      domain: Users 
+      tags: ['users', 'logins', 'user_login']
+      source_system: MySQL
+      refresh_frequency: Daily
+
+    columns:
+      - name: login_id
+        description: Unique identifier for the user login session.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Unique identifier of the user who logged in.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: login_time
+        description: Timestamp when the user logged into the platform.
+        tests:
+          - not_null
+
+      - name: logout_time
+        description: Timestamp when the user logged out of the platform.
+
+      - name: time_spend_in_seconds
+        description: Total duration of the login session in seconds.
+
+      - name: login_local_ip_address
+        description: Local IP address recorded at the time of login.
+
+      - name: login_public_ip_address
+        description: Public IP address recorded at the time of login.
+
+      - name: login_ip_address
+        description: IP address associated with the login session.
+
+      - name: login_location
+        description: Approximate geographic location associated with the login IP address.
+
+      - name: device_type
+        description: Type of device used during login, such as mobile or desktop.
+
+      - name: browser
+        description: Browser used by the user during login.

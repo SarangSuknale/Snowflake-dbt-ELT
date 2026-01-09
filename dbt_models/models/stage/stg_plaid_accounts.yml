@@ -1,0 +1,109 @@
+version: 2
+
+models:
+  - name: stg_plaid_accounts
+    description: >
+      Staging model for Plaid account data. This table represents cleaned and
+      type-casted raw Plaid API account records, including balances, account
+      metadata, and refresh status information.
+
+    meta:
+      owner: Sarang
+      source_system: plaid
+      pii: true
+      grain: one row per account
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account.
+        tests:
+          - not_null
+
+      - name: user_id
+        description: Unique identifier of the user who owns the account.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: provider_id
+        description: Identifier of the data provider (Plaid).
+        tests:
+          - not_null
+
+      - name: provider_name
+        description: Name of the data provider.
+        tests:
+          - not_null
+
+      - name: created_date
+        description: Timestamp when the account record was created in Plaid.
+        tests:
+          - not_null
+
+      - name: last_updated
+        description: Timestamp when the account record was last updated.
+
+      - name: aggregation_source
+        description: Source through which account data was aggregated.
+
+      - name: account_name
+        description: Display name of the account provided by the institution.
+
+      - name: account_number
+        description: Account number provided by the financial institution.
+        tests:
+          - not_null
+
+      - name: container
+        description: Account container type (e.g., banking, credit, investment).
+
+      - name: account_type
+        description: High-level type of account (checking, savings, credit).
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['CHECKING', 'SAVINGS', 'CREDIT', 'LOAN', 'INVESTMENT']
+              severity: warn
+
+      - name: amount
+        description: Current balance amount extracted from the balance JSON.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -100000000
+                max_value: 100000000
+              severity: warn
+
+      - name: currency
+        description: ISO currency code for the account balance.
+        tests:
+          - not_null
+
+      - name: available_balance
+        description: Available balance amount for the account.
+
+      - name: current_balance
+        description: Current posted balance of the account.
+
+      - name: amount_due
+        description: Outstanding amount due for credit-based accounts.
+
+      - name: last_refreshed
+        description: Timestamp of the last successful account refresh.
+
+      - name: last_refresh_attempt
+        description: Timestamp of the most recent refresh attempt.
+
+      - name: refresh_status
+        description: Status of the last refresh attempt.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['SUCCESS', 'FAILED', 'IN_PROGRESS']
+              severity: warn
+
+      - name: failed_reason
+        description: Reason for refresh failure if the last refresh attempt failed.
