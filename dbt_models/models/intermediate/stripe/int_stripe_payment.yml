@@ -1,0 +1,109 @@
+version: 2
+
+models:
+  - name: int_stripe_payment
+    description: >
+            This intermediate model represents Stripe payment transactions enriched
+            with payment method details and lifecycle metrics. Each record corresponds
+            to a single payment event and includes payment status, success indicators,
+            timing attributes, and associated card metadata to support revenue,
+            payment success analysis, and billing operations.
+
+    tags:
+      - stripe
+      - payments
+      - intermediate
+
+    meta:
+      owner: Sarang Suknale
+      domain: billing
+      source_system: stripe
+      maturity: intermediate
+      pii: true
+
+    columns:
+      - name: payment_id
+        description: Unique identifier for the payment in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: payment_method_id
+        description: Identifier of the payment method used for the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_stripe_payment_methods')
+                field: payment_method_id
+
+      - name: customer_id
+        description: Identifier of the Stripe customer who made the payment.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_stripe_customers')
+                field: customer_id
+
+      - name: amount
+        description: Amount charged in the payment.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code in which the payment was processed.
+
+      - name: status
+        description: Status of the Stripe payment (e.g., succeeded, failed, pending).
+
+      - name: is_successful_payment
+        description: Indicates whether the payment was successful.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - TRUE 
+                  - FALSE
+
+      - name: payment_made_date
+        description: Timestamp when the payment was made.
+        tests:
+          - not_null
+
+      - name: days_since_payment
+        description: Number of days since the payment was made.
+
+      - name: months_since_payment
+        description: Number of months since the payment was made.
+
+      - name: payment_method_type
+        description: Type of payment method used (e.g., card, bank_transfer).
+
+      - name: card_brand
+        description: Brand of the card used for the payment (e.g., Visa, Mastercard).
+        meta:
+          pii: true
+
+      - name: card_last_four_digit
+        description: Last four digits of the card used for the payment.
+        meta:
+          pii: true
+          masked: true
+
+      - name: exp_month
+        description: Expiration month of the payment card.
+
+      - name: exp_year
+        description: Expiration year of the payment card.
+
+      - name: card_added_date
+        description: Timestamp when the payment card was added.
+        tests:
+          - not_null
+
+      - name: days_since_card_added
+        description: Number of days since the payment card was added.
+
+      - name: months_since_card_added
+        description: Number of months since the payment card was added.

@@ -1,0 +1,82 @@
+
+models:
+  - name: int_src2_transactions
+    description: >
+              This intermediate model contains normalized transaction data sourced
+              from Source 2. Each row represents a single transaction linked to a user
+              account. The model cleans category values, standardizes transaction
+              attributes, and adds derived metrics such as transaction age to support
+              downstream analytics and unified transaction reporting.
+
+    tags:
+      - transactions
+      - intermediate
+      - plaid
+
+    meta:
+      owner: Sarang Suknale
+      domain: transactions
+      source_system: plaid
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier for the transaction provided by Plaid.
+        tests:
+          - not_null
+
+      - name: account_id
+        description: Identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_accounts')
+                field: account_id
+
+      - name: transaction_date
+        description: Date on which the transaction occurred.
+        tests:
+          - not_null
+
+      - name: transaction_age_in_months
+        description: Number of months elapsed since the transaction date.
+
+      - name: amount
+        description: Monetary amount of the transaction.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code used for the transaction.
+
+      - name: authorized_date
+        description: Date when the transaction was authorized by the merchant.
+
+      - name: category
+        description: Cleaned and normalized category assigned to the transaction.
+
+      - name: merchant
+        description: Merchant name associated with the transaction.
+
+      - name: payment_channel
+        description: Channel through which the payment was made (e.g., online, in-store).
+
+      - name: is_pending
+        description: Indicates whether the transaction is still pending.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: txt_src
+        description: Source identifier indicating the transaction provider.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - Source 2 
+

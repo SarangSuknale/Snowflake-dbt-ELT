@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: int_stripe_invoice
+    description: >
+            This intermediate model contains Stripe invoice data enriched with
+            derived lifecycle metrics. Each record represents a single invoice
+            generated for a customer subscription and includes monetary, status,
+            and timing attributes to support billing, revenue, and subscription
+            analytics.
+
+    tags:
+      - stripe
+      - invoices
+      - intermediate
+
+    meta:
+      owner: Sarang Suknale
+      domain: billing
+      source_system: stripe
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: invoice_id
+        description: Unique identifier for the invoice in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Identifier of the Stripe customer associated with the invoice.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_stripe_customers')
+                field: customer_id
+
+      - name: object
+        description: Stripe object type for the invoice record.
+
+      - name: subscription_id
+        description: Identifier of the Stripe subscription linked to the invoice.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('int_stripe_subscription')
+                field: subscription_id
+
+      - name: amount
+        description: Total amount due on the invoice.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code in which the invoice amount is denominated.
+
+      - name: status
+        description: Current status of the invoice (e.g., paid, open, void, uncollectible).
+
+      - name: created_date
+        description: Timestamp when the invoice was created in Stripe.
+        tests:
+          - not_null
+
+      - name: days_since_created
+        description: Number of days since the invoice was created.
+
+      - name: months_since_created
+        description: Number of months since the invoice was created.

@@ -1,0 +1,166 @@
+
+models:
+  - name: int_users
+    description: >
+            This intermediate model represents a unified and enriched view of users.
+            It extends the raw user data with derived demographic, lifecycle, and
+            membership metrics such as age, tenure, membership status, remaining
+            membership days, and churn indicators. This model serves as the canonical
+            user dimension for downstream analytics and reporting.
+
+    tags:
+      - users
+      - intermediate
+      - dimension
+
+    meta:
+      owner: Sarang Suknale
+      domain: users
+      source_system: mysql
+      maturity: intermediate
+      pii: true
+
+    columns:
+      - name: user_id
+        description: Unique identifier for the user.
+        tests:
+          - not_null
+          - unique
+
+      - name: full_name
+        description: Full name of the user.
+        meta:
+          pii: true
+
+      - name: email
+        description: Email address of the user.
+        meta:
+          pii: true
+          sensitivity: high
+        tests:
+          - not_null
+
+      - name: gender
+        description: Gender of the user as provided during registration.
+
+      - name: date_of_birth
+        description: User’s date of birth.
+        meta:
+          pii: true
+
+      - name: age
+        description: User’s age in years, calculated from date of birth.
+
+      - name: is_active
+        description: Indicates whether the user account is currently active.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: country
+        description: Country where the user resides.
+
+      - name: state
+        description: State or region where the user resides.
+
+      - name: city
+        description: City where the user resides.
+
+      - name: street
+        description: Street address of the user.
+        meta:
+          pii: true
+
+      - name: postal_code
+        description: Postal or ZIP code of the user’s address.
+        meta:
+          pii: true
+
+      - name: mobile_number
+        description: Mobile phone number of the user.
+        meta:
+          pii: true
+          sensitivity: high
+
+      - name: signup_timestamp
+        description: Timestamp when the user signed up for the platform.
+        tests:
+          - not_null
+
+      - name: months_since_signup
+        description: Number of months since the user signed up.
+
+      - name: trail_start
+        description: Start date of the user’s trial period.
+
+      - name: trail_end
+        description: End date of the user’s trial period.
+
+      - name: membership_start
+        description: Start date of the user’s paid membership.
+
+      - name: membership_end
+        description: End date of the user’s paid membership.
+
+      - name: membership_remaining_days
+        description: Number of days remaining in the user’s membership.
+
+      - name: membership_plan
+        description: Subscription or membership plan selected by the user.
+
+      - name: membership_status
+        description: Current membership status of the user, derived from trial and membership dates.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - active
+                  - cancelled
+
+      - name: email_alerts
+        description: Indicates whether the user has enabled email alerts.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: text_alerts
+        description: Indicates whether the user has enabled text alerts.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_verified
+        description: Indicates whether the user account has been verified.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_email_verified
+        description: Indicates whether the user’s email address has been verified.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_churn
+        description: Indicates whether the user has churned based on membership and trial end dates.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'True' 
+                  - 'False'

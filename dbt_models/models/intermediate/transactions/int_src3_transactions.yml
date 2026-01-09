@@ -1,0 +1,90 @@
+
+models:
+  - name: int_src3_transactions
+    description: >
+              This intermediate model contains normalized transaction data sourced
+              from Source 3. Each record represents a single financial transaction tied
+              to a user account. The model standardizes transaction attributes, maps
+              provider-specific flags to common meanings, and adds freshness and age
+              metrics to support downstream analytics.
+
+    tags:
+      - transactions
+      - intermediate
+      - yodlee
+
+    meta:
+      owner: Sarang Suknale
+      domain: transactions
+      source_system: yodlee
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier for the transaction provided by Yodlee.
+        tests:
+          - not_null
+
+      - name: account_id
+        description: Identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_accounts')
+                field: account_id
+
+      - name: transaction_date
+        description: Date on which the transaction occurred.
+        tests:
+          - not_null
+
+      - name: transaction_age_in_months
+        description: Number of months elapsed since the transaction date.
+
+      - name: amount
+        description: Monetary amount of the transaction.
+        tests:
+          - not_null
+
+      - name: category
+        description: Category assigned to the transaction by Yodlee.
+
+      - name: merchant
+        description: Merchant name associated with the transaction.
+
+      - name: is_manual
+        description: Indicates whether the transaction was manually added.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: is_verified
+        description: Indicates whether the transaction was verified or physical.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: post_date
+        description: Date when the transaction was posted to the account.
+
+      - name: last_updated
+        description: Timestamp when the transaction record was last updated.
+
+      - name: days_since_updated
+        description: Number of days since the transaction was last updated.
+
+      - name: txt_src
+        description: Source identifier indicating the transaction provider.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - Source 3

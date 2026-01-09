@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: int_src3_accounts
+    description: >
+                This intermediate model enriches Yodlee account data with derived balance
+                metrics, credit utilization calculations, account age attributes, and
+                aggregation freshness indicators. Each row represents a single financial
+                account owned by a user and is designed to support downstream account
+                monitoring, credit usage analysis, and data freshness reporting.
+
+    tags:
+      - yodlee
+      - accounts
+      - intermediate
+
+    meta:
+      owner: data_platform
+      domain: accounts
+      source_system: yodlee
+      maturity: intermediate
+      pii: false
+
+    columns:
+      - name: account_id
+        description: Unique identifier for the financial account.
+        tests:
+          - not_null
+
+      - name: user_id
+        description: Unique identifier of the user who owns the account.
+        meta:
+          pii: true
+          sensitivity: high
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: account_number_last4
+        description: Masked account number displaying only the last four digits.
+        meta:
+          pii: true
+          masked: true
+
+      - name: account_type
+        description: Normalized account type derived from the source account type.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Saving
+                  - Checking
+                  - Loan
+                  - Credit
+                  - Investment
+              severity: warn
+
+      - name: account_status
+        description: Current status of the account.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - ACTIVE 
+                  - INACTIVE 
+                  - CLOSED
+
+      - name: current_balance
+        description: Current total balance of the account.
+
+      - name: available_balance
+        description: Amount of funds currently available for use.
+
+      - name: balance_diffrence
+        description: Difference between the current balance and available balance.
+
+      - name: credit_utilization_ratio
+        description: Ratio of used credit to total available credit for the account.
+                     Calculated as current balance divided by total available balance.
+
+      - name: currency
+        description: Currency code in which the account balances are recorded.
+
+      - name: balance_date
+        description: Date when the account balance was last updated.
+
+      - name: days_since_balance_check
+        description: Number of days since the account balance was last checked.
+
+      - name: aggregation_source
+        description: Source system or method used to aggregate the account data.
+
+      - name: days_since_aggregation_success
+        description: Number of days since the account was last successfully aggregated.
+
+      - name: is_data_stale
+        description: Indicates whether the account data is considered stale based on
+                     the last successful aggregation date.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - true
+                  - false
+
+      - name: created_date
+        description: Date when the account was first created in the system.
+        tests:
+          - not_null
+
+      - name: account_age_in_days
+        description: Age of the account in days since creation.
+
+      - name: account_age_in_months
+        description: Age of the account in months since creation.
+
+      - name: last_updated
+        description: Timestamp when the account record was last updated.
+
+      - name: account_src
+        description: Source identifier indicating the origin of the account data.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - Source 3

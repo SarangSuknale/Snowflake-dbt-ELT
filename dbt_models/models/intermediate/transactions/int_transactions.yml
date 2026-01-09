@@ -1,0 +1,136 @@
+
+models:
+  - name: int_transactions
+    description: >
+              This intermediate model represents a unified view of financial transactions
+              across all supported aggregation providers. It standardizes transaction attributes, resolves provider-specific
+              fields using coalescing logic, and exposes a consistent schema for downstream
+              transaction marts, reporting, and analytics.
+              Each row represents a single financial transaction linked to a user account.
+
+    tags:
+      - transactions
+      - intermediate
+      - unified
+
+    meta:
+      owner: Sarang Suknale
+      domain: transactions
+      source_system: multi_provider
+      maturity: intermediate
+      pii: false
+      providers:
+        - finicity
+        - plaid
+        - yodlee
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier for the transaction provided by the source system.
+        tests:
+          - not_null
+          - unique
+
+      - name: account_id
+        description: Identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_accounts')
+                field: account_id
+
+      - name: user_id
+        description: Identifier of the user who owns the transaction.
+        meta:
+          pii: true
+          sensitivity: high
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_users')
+                field: user_id
+
+      - name: transaction_date
+        description: Date on which the transaction occurred.
+        tests:
+          - not_null
+
+      - name: transaction_age_in_months
+        description: Number of months elapsed since the transaction date.
+
+      - name: amount
+        description: Monetary amount of the transaction.
+        tests:
+          - not_null
+
+      - name: currency
+        description: Currency code in which the transaction was recorded.
+
+      - name: category
+        description: Normalized category assigned to the transaction.
+
+      - name: merchant
+        description: Merchant name associated with the transaction.
+
+      - name: is_manual
+        description: Indicates whether the transaction was manually added by the user.
+                     Derived by coalescing provider-specific manual indicators.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: is_recurring
+        description: Indicates whether the transaction is part of a recurring series.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: is_verified
+        description: Indicates whether the transaction has been verified or confirmed.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: post_date
+        description: >
+          Date when the transaction was posted or authorized, depending on provider.
+          Derived using provider-aware coalescing logic.
+
+      - name: transaction_status
+        description: Current status of the transaction (e.g., pending, posted, completed).
+
+      - name: last_updated
+        description: Timestamp when the transaction record was last updated across sources.
+
+      - name: payment_channel
+        description: Channel through which the payment was made (e.g., online, in-store).
+
+      - name: is_pending
+        description: Indicates whether the transaction is still pending.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'true'
+                  - 'false'
+
+      - name: txt_src
+        description: Source system from which the transaction originated.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - source 1
+                  - Source 2
+                  - Source 3

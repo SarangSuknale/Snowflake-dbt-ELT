@@ -1,0 +1,121 @@
+
+models:
+  - name: int_alerts
+    description: >
+          This intermediate model represents a unified view of user alerts sent
+          through multiple communication channels, including email and text.
+          It standardizes alert attributes, message content, delivery status,
+          and derives success, pending, and failure indicators to support alert
+          monitoring, engagement analysis, and operational reporting.
+
+    tags:
+      - alerts
+      - intermediate
+      - text alerts
+      - email alerts
+
+    meta:
+      owner: Sarang Suknale
+      domain: alerts
+      source_system: MySQL
+      maturity: intermediate
+      pii: true
+
+    columns:
+      - name: id
+        description: Unique identifier for the alert event.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Identifier of the user who received the alert.
+        meta:
+          pii: true
+          sensitivity: high
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_users')
+                field: user_id
+
+      - name: contact
+        description: Contact detail used to send the alert. This can be an email address
+                     for email alerts or a mobile number for text alerts.
+        meta:
+          pii: true
+          sensitivity: high
+
+      - name: channel
+        description: Communication channel used to send the alert.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - email
+                  - text
+
+      - name: alert_type
+        description: Type or category of the alert sent to the user.
+
+      - name: alert_name
+        description: Human-readable name of the alert.
+
+      - name: alert_sent_date
+        description: Timestamp when the alert was sent.
+        tests:
+          - not_null
+
+      - name: alert_sent_frequency
+        description: Frequency at which the alert is sent (e.g., daily, weekly).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - once
+                  - daily 
+                  - weekly
+                  - monthly
+
+      - name: message_id
+        description: Identifier of the message from the messaging provider.
+
+      - name: message_subject
+        description: Subject line of the alert message (email alerts only).
+
+      - name: message_body
+        description: Body content of the alert message.
+
+      - name: status
+        description: Delivery status of the alert as reported by the messaging provider
+                    (e.g., delivered, queued, failed, bounced).
+
+      - name: is_success
+        description: Indicates whether the alert was successfully delivered, based on
+                     provider-specific status values.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_pending
+        description: Indicates whether the alert is currently pending delivery.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_failed
+        description: Indicates whether the alert delivery failed.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
