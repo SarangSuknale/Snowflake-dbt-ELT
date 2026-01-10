@@ -8,17 +8,16 @@ models:
                 attributes, adds derived fields such as transaction age, and prepares
                 the data for downstream transaction-level marts and analytics.
 
-    tags:
-      - transactions
-      - intermediate
-      - finicity
-
     meta:
       owner: Sarang Suknale
       domain: transactions
       source_system: finicity
       maturity: intermediate
       pii: false
+      tags:
+        - transactions
+        - intermediate
+        - finicity
 
     columns:
       - name: transaction_id

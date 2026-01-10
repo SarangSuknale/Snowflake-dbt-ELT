@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: dim_stripe_product
+    description: >
+      Dimension table combining Stripe product and pricing information,
+      including pricing amounts, billing intervals, product metadata,
+      and lifecycle indicators.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      source_system: stripe
+      grain: one row per price_id
+      domain: billing 
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: product_id
+        description: Unique identifier of the product in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: price_id
+        description: Unique identifier of the price in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: product_price
+        description: Price amount for the product in the specified currency.
+        tests:
+          - not_null
+
+      - name: currency
+        description: ISO currency code for the product price.
+
+      - name: interval
+        description: Billing interval for the price (e.g., monthly, yearly).
+        tests:
+          - not_null
+
+      - name: is_price_active
+        description: Indicates whether the price is currently active in Stripe.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: last_price_updated
+        description: Timestamp when the price was last updated.
+
+      - name: days_since_price_updated
+        description: Number of days since the price was last updated.
+
+      - name: months_since_price_updated
+        description: Number of months since the price was last updated.
+
+      - name: product_name
+        description: Name of the product in Stripe.
+        tests:
+          - not_null
+
+      - name: product_description
+        description: Description of the product in Stripe.
+        tests:
+          - not_null
+
+      - name: is_product_active
+        description: Indicates whether the product is currently active in Stripe.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: product_created_date
+        description: Timestamp when the product was created in Stripe.
+        tests:
+          - not_null
+
+      - name: days_since_product_created
+        description: Number of days since the product was created.
+
+      - name: months_since_product_created
+        description: Number of months since the product was created.
+

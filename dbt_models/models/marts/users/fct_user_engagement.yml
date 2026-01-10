@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: fct_user_engagement
+    description: >
+      User-level engagement metrics summarizing login activity,
+      session duration, recency, and recent activity status.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: users
+      tags: ['users', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user whose engagement is measured.
+        tests:
+          - not_null
+          - unique
+
+      - name: total_sessions
+        description: Total number of login sessions recorded for the user.
+        tests:
+          - not_null
+
+      - name: total_time_spend_minutes
+        description: Total time the user spent across all sessions in minutes.
+        tests:
+          - not_null
+
+      - name: avg_session_duration_minutes
+        description: Average duration of a user session measured in minutes.
+        tests:
+          - not_null
+
+      - name: last_login
+        description: Timestamp of the most recent user login.
+
+      - name: days_since_last_login
+        description: Number of days since the user last logged in.
+
+      - name: active_last_30_days
+        description: Indicates whether the user has logged in within the last 30 days.

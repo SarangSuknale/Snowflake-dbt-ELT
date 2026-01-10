@@ -1,0 +1,47 @@
+
+models:
+  - name: fct_users_txt_summary
+    description: >
+      User-level transaction summary providing transaction volume,
+      posting status breakdown, income and spending totals,
+      and recurring spending indicators.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: transactions 
+      tags: ['transactions', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user who owns the transactions.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              field: user_id
+              to: ref('int_users')
+
+      - name: total_transactions
+        description: Total number of transactions associated with the user.
+        tests:
+          - not_null
+
+      - name: total_posted_txt
+        description: Number of posted or reconciled transactions for the user.
+
+      - name: total_pending_txt
+        description: Number of pending transactions for the user.
+
+      - name: total_spend
+        description: Total monetary value of debit transactions for the user.
+
+      - name: total_income
+        description: Total monetary value of credit transactions for the user.
+
+      - name: avg_txt_amount
+        description: Average absolute transaction amount for the user.
+
+      - name: recurring_spend
+        description: Total spending amount from recurring debit transactions for the user.

@@ -1,0 +1,129 @@
+
+models:
+  - name: dim_accounts
+    description: >
+      Dimension table containing one record per financial account.
+      This model consolidates account metadata, ownership, status,
+      and data freshness indicators derived from aggregation activity.
+      It is designed for analytical use cases such as account monitoring,
+      user-level rollups, and data freshness reporting.
+
+    meta:
+      owner: Sarang 
+      layer: mart
+      domain: account
+      grain: one row per account_id
+      tags: ['accounts','marts']
+
+    columns:
+      - name: account_id
+        description: Unique identifier for the account. This is the primary key for the dim_accounts table.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Unique identifier of the user who owns the account. 
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                field: user_id
+                to: ref('in_users')
+
+      - name: account_number_last4
+        description: Last four digits of the account number.
+          Used for display and account disambiguation purposes.
+        tests:
+          - not_null
+
+      - name: account_type
+        description: High-level classification of the account
+          (e.g., depository, credit, loan, investment).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Saving
+                  - Checking
+                  - Loan
+                  - Credit
+                  - Investment
+              severity: warn
+
+      - name: account_subtype
+        description: More granular classification within the account type (e.g., checking, savings, credit_card).
+
+      - name: account_status
+        description: Current lifecycle status of the account (e.g., active, inactive, closed).
+
+      - name: account_src
+        description: Source system or provider from which the account data originates
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - source 1
+                  - source 2
+                  - Source 3
+
+      - name: aggregation_source
+        description: Aggregation platform responsible for refreshing account data.
+          May differ from the original account source.
+
+      - name: created_date
+        description: Timestamp when the account was first created or ingested into the system.
+        tests:
+          - not_null
+
+      - name: account_age_in_days
+        description: Number of days since the account was created.
+                     Calculated as the difference between the current date and created_date.
+        tests:
+          - not_null
+
+      - name: account_age_in_months
+        description: Number of months since the account was created.
+                     Useful for cohort and lifecycle analysis.
+        tests:
+          - not_null
+
+      - name: last_updated
+        description: Timestamp when the account record was last updated due to any metadata or status change.
+
+      - name: last_refreshed
+        description: Timestamp of the most recent successful data refresh from the aggregation source.
+
+      - name: days_since_last_refreshed
+        description: Number of days since the last successful refresh of the account data.
+                     Used to assess data freshness.
+
+      - name: last_refresh_attempt
+        description: Timestamp of the most recent attempt to refresh the account,
+                     regardless of success or failure.
+
+      - name: days_since_last_refresh_attempt
+        description: Number of days since the most recent refresh attempt.
+
+      - name: is_data_stale
+        description: Boolean indicator showing whether the account data is considered stale based on 
+                     internal freshness rules.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - true
+                  - false
+
+      - name: freshness_bucket
+        description: Categorized freshness status of the account based on days_since_last_refreshed
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - fresh 
+                  - aging 
+                  - stale

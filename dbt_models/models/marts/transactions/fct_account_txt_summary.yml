@@ -1,0 +1,64 @@
+
+models:
+  - name: fct_account_txt_summary
+    description: >
+      Account-level transaction summary providing transaction volume,
+      posting status breakdown, debit and credit counts, and monetary aggregates.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per account_id
+      domain: transactions
+      tags: ['taransactions', 'marts']
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account associated with the transactions.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                field: account_id
+                to: ref('int_accounts')
+
+      - name: total_transactions
+        description: Total number of transactions associated with the account.
+        tests:
+          - not_null
+
+      - name: total_posted_txt
+        description: Number of posted or reconciled transactions for the account.
+        tests:
+          - not_null
+
+      - name: total_pending_txt
+        description: Number of pending transactions for the account.
+        tests:
+          - not_null
+
+      - name: debit_count
+        description: Number of debit transactions for the account.
+        tests:
+          - not_null
+
+      - name: credit_count
+        description: Number of credit transactions for the account.
+        tests:
+          - not_null
+
+      - name: total_debits
+        description: Total monetary value of debit transactions for the account.
+        tests:
+          - not_null
+
+      - name: total_credits
+        description: Total monetary value of credit transactions for the account.
+        tests:
+          - not_null
+
+      - name: avg_txt_amount
+        description: Average absolute transaction amount for the account.
+        tests:
+          - not_null

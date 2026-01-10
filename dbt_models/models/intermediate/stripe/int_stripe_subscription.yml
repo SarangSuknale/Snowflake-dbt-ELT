@@ -9,17 +9,16 @@ models:
               expiration indicators, and remaining period metrics to support
               subscription lifecycle, churn, and revenue analysis.
 
-    tags:
-      - stripe
-      - subscriptions
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: billing
       source_system: stripe
       maturity: intermediate
       pii: false
+      tags:
+      - stripe
+      - subscriptions
+      - intermediate
 
     columns:
       - name: subscription_id

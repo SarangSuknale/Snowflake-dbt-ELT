@@ -8,17 +8,16 @@ models:
               provider-specific flags to common meanings, and adds freshness and age
               metrics to support downstream analytics.
 
-    tags:
-      - transactions
-      - intermediate
-      - yodlee
-
     meta:
       owner: Sarang Suknale
       domain: transactions
       source_system: yodlee
       maturity: intermediate
       pii: false
+      tags:
+        - transactions
+        - intermediate
+        - yodlee
 
     columns:
       - name: transaction_id

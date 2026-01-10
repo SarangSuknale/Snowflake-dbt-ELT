@@ -8,18 +8,17 @@ models:
               into a single, analytics-ready view to support subscription analysis,
               revenue reporting, and product performance tracking.
 
-    tags:
-      - stripe
-      - products
-      - pricing
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: billing
       source_system: stripe
       maturity: intermediate
       pii: false
+      tags:
+      - stripe
+      - products
+      - pricing
+      - intermediate
 
     columns:
       - name: price_id

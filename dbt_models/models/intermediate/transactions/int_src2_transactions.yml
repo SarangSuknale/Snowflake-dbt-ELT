@@ -8,17 +8,16 @@ models:
               attributes, and adds derived metrics such as transaction age to support
               downstream analytics and unified transaction reporting.
 
-    tags:
-      - transactions
-      - intermediate
-      - plaid
-
     meta:
       owner: Sarang Suknale
       domain: transactions
       source_system: plaid
       maturity: intermediate
       pii: false
+      tags:
+        - transactions
+        - intermediate
+        - plaid
 
     columns:
       - name: transaction_id

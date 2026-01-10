@@ -9,17 +9,16 @@ models:
                 account owned by a user and is designed to support downstream account
                 monitoring, credit usage analysis, and data freshness reporting.
 
-    tags:
-      - yodlee
-      - accounts
-      - intermediate
-
     meta:
       owner: data_platform
       domain: accounts
       source_system: yodlee
       maturity: intermediate
       pii: false
+      tags:
+      - yodlee
+      - accounts
+      - intermediate
 
     columns:
       - name: account_id

@@ -1,0 +1,36 @@
+
+models:
+  - name: fct_user_kpi
+    description: >
+      Monthly user KPI metrics summarizing user growth and membership
+      status distribution based on signup cohorts.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per signup_month
+      domain: users  
+      tags: ['users', 'marts']
+
+    columns:
+      - name: months
+        description: Month of user signup, truncated to month level.
+        tests:
+          - not_null
+
+      - name: total_users
+        description: Total number of users who signed up in the month.
+        tests:
+          - not_null
+
+      - name: new_users
+        description: Number of users who completed at least one month since signup.
+
+      - name: paid_users
+        description: Number of users with an active paid membership.
+
+      - name: trial_users
+        description: Number of users currently in trial membership status.
+
+      - name: cancelled_users
+        description: Number of users with cancelled membership status.

@@ -8,17 +8,16 @@ models:
                 owned by a user and is designed to support downstream account monitoring,
                 credit usage analysis, and data freshness reporting.
 
-    tags:
-      - plaid
-      - accounts
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: accounts
       source_system: plaid
       maturity: intermediate
       pii: false
+      tags:
+      - plaid
+      - accounts
+      - intermediate
 
     columns:
       - name: account_id

@@ -1,0 +1,30 @@
+
+models:
+  - name: fct_txt_source
+    description: >
+      Aggregated transaction metrics by transaction source, providing visibility
+      into transaction volume and posting status across source systems.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per transaction_source
+      domain: transactions 
+      tags: ['transactions', 'marts']
+
+    columns:
+      - name: transaction_source
+        description: Source system from which the transaction data originated.
+        tests:
+          - not_null
+          - unique
+
+      - name: total_transactions
+        description: Total number of transactions from the source.
+
+      - name: posted_transactions
+        description: Number of posted or reconciled transactions from the source.
+
+      - name: pending_transactions
+        description: Number of pending transactions from the source.
+

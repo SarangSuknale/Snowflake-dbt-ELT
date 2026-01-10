@@ -1,0 +1,92 @@
+
+models:
+  - name: fct_alerts
+    description: >
+      Fact table containing one record per alert event, capturing alert metadata,
+      delivery channel, send frequency, delivery status, and outcome flags.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per alert id
+      domain: alert 
+      tags: ['alerts', 'marts']
+
+    columns:
+      - name: id
+        description: Unique identifier of the alert event.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Unique identifier of the user who received the alert.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                field: user_id
+                to: ref('int_users')
+
+      - name: channel
+        description: Delivery channel used to send the alert (e.g., email, sms, push).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - email
+                  - text
+
+      - name: alert_name
+        description: Human-readable name of the alert.
+
+      - name: alert_type
+        description: Classification of the alert based on its purpose or trigger.
+
+      - name: alert_sent_frequency
+        description: Frequency at which the alert is configured to be sent.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - once
+                  - daily 
+                  - weekly
+                  - monthly
+
+      - name: alert_sent_date
+        description: Timestamp when the alert was sent to the user.
+        tests:
+          - not_null
+
+      - name: status
+        description: Current delivery status of the alert.
+
+      - name: is_success
+        description: Indicates whether the alert was successfully delivered.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_failed
+        description: Indicates whether the alert delivery failed.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: is_pending
+        description: Indicates whether the alert is still pending delivery.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE

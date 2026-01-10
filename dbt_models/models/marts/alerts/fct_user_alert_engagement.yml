@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: fct_user_alert_engagement
+    description: >
+      User-level alert engagement summary capturing alert volume,
+      channel usage, recency, and preferred alert delivery channel.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: alert
+      tags: ['alerts', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user who received alerts.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                field: user_id
+                to: ref('int_users')
+
+      - name: total_alerts
+        description: Total number of alerts sent to the user.
+        tests:
+          - not_null
+
+      - name: email_alerts
+        description: Number of alerts sent to the user via email channel.
+        tests:
+          - not_null
+
+      - name: text_alerts
+        description: Number of alerts sent to the user via text channel.
+        tests:
+          - not_null
+
+      - name: last_alert_send_on
+        description: Most recent date and time when an alert was sent to the user.
+        tests:
+          - not_null
+
+      - name: channel_preference
+        description: User’s preferred alert channel based on historical alert volume.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - email
+                  - text 
+                  - mixed
+              quote: true

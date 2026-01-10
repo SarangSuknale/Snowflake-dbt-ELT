@@ -1,0 +1,105 @@
+
+models:
+  - name: dim_users
+    description: >
+      Dimension table containing user demographic, contact, location,
+      account status, and lifecycle information for analytical use cases.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: users 
+      tags: ['users', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user.
+        tests:
+          - not_null
+          - unique
+
+      - name: full_name
+        description: Full name of the user.
+        tests:
+          - not_null
+
+      - name: email
+        description: Primary email address of the user.
+        tests:
+          - not_null
+
+      - name: mobile_number
+        description: Mobile phone number of the user.
+        tests:
+          - not_null
+
+      - name: gender
+        description: Gender of the user as self-reported or inferred.
+
+      - name: date_of_birth
+        description: Date of birth of the user.
+
+      - name: age
+        description: Age of the user in years.
+
+      - name: country
+        description: Country of residence of the user.
+        tests:
+          - not_null
+
+      - name: state
+        description: State or region of residence of the user.
+        tests:
+          - not_null
+
+      - name: city
+        description: City of residence of the user.
+        tests:
+          - not_null
+
+      - name: street
+        description: Street address of the user.
+
+      - name: postal_code
+        description: Postal or ZIP code of the user's address.
+
+      - name: is_active
+        description: Indicates whether the user account is currently active.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: is_verified
+        description: Indicates whether the user identity has been verified.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: is_email_verified
+        description: Indicates whether the user email address has been verified.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: signup_timestamp
+        description: Timestamp when the user signed up for the platform.
+        tests:
+          - not_null
+
+      - name: months_since_signup
+        description: Number of months since the user signed up.
+        tests:
+          - not_null
