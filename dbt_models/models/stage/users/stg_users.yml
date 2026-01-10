@@ -67,10 +67,10 @@ models:
         tests:
           - not_null
 
-      - name: trail_start
+      - name: trial_start
         description: Timestamp when the user's trial period started.
 
-      - name: trail_end
+      - name: trial_end
         description: Timestamp when the user's trial period ended.
 
       - name: membership_start

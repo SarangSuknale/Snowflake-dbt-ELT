@@ -20,10 +20,10 @@ models:
           - not_null
           - unique
 
-      - name: trail_start
+      - name: trial_start
         description: Start date of the user's trial membership.
 
-      - name: trail_end
+      - name: trial_end
         description: End date of the user's trial membership.
 
       - name: membership_plan
@@ -47,7 +47,7 @@ models:
       - name: membership_remaining_days
         description: Number of days remaining in the current membership period.
 
-      - name: is_trail
+      - name: is_trial
         description: Indicates whether the user is currently on a trial membership.
         tests:
           - not_null

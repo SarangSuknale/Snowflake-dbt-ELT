@@ -92,10 +92,10 @@ models:
       - name: months_since_signup
         description: Number of months since the user signed up.
 
-      - name: trail_start
+      - name: trial_start
         description: Start date of the user’s trial period.
 
-      - name: trail_end
+      - name: trial_end
         description: End date of the user’s trial period.
 
       - name: membership_start

@@ -16,8 +16,8 @@ with users as (
           mobile_number,
           signup_timestamp,
           datediff('month', signup_timestamp, current_date()) as months_since_signup,
-          trail_start,
-          trail_end,
+          trial_start,
+          trial_end,
           membership_start,
           membership_end,
           case
@@ -28,8 +28,8 @@ with users as (
           membership_plan,
           case
               when current_date() between membership_start and membership_end then 'active'
-              when current_date() between trail_start and trail_end then 'trail'
-              when membership_end < current_date() or (membership_end is null and trail_end < current_date()) then 'cancelled'
+              when current_date() between trial_start and trial_end then 'trial'
+              when membership_end < current_date() or (membership_end is null and trial_end < current_date()) then 'cancelled'
               else null
           end as membership_status,
           email_alerts,
@@ -38,7 +38,7 @@ with users as (
           is_email_verified,
           case
               when membership_end > current_date() then 'False'
-              when membership_end < current_date() or (membership_end is null and trail_end < current_date()) then 'True'
+              when membership_end < current_date() or (membership_end is null and trial_end < current_date()) then 'True'
               else null
            end as is_churn
     from {{ref('stg_users')}}
