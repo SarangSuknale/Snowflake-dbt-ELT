@@ -1,0 +1,49 @@
+
+models:
+  - name: fct_alert_type
+    description: >
+      Aggregated alert delivery metrics by alert type and channel,
+      providing visibility into alert volume, delivery outcomes,
+      and success and failure rates.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per alert_type per channel
+      domain: alert 
+      tags: ['alerts', 'marts']
+
+    columns:
+      - name: alert_type
+        description: Classification of the alert based on its purpose or trigger.
+        tests:
+          - not_null
+
+      - name: channel
+        description: Delivery channel used to send the alert (e.g., email, sms, push).
+        tests:
+          - not_null
+
+      - name: total_alerts
+        description: Total number of alerts sent for the given alert type and channel.
+        tests:
+          - not_null
+
+      - name: total_success
+        description: Number of alerts successfully delivered.
+
+      - name: success_rate
+        description: Ratio of successfully delivered alerts to total alerts.
+
+      - name: total_failed
+        description: Number of alerts that failed to deliver.
+
+      - name: failed_rate
+        description: Ratio of failed alerts to total alerts.
+
+      - name: total_pending
+        description: Number of alerts currently in pending state.
+
+      - name: pending_rate
+        description: Ratio of pending alerts to total alerts.
+

@@ -1,0 +1,42 @@
+
+models:
+  - name: fct_user_lifecycle
+    description: >
+      User lifecycle dimension capturing tenure, lifecycle stage,
+      and activity indicators based on signup duration.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: users 
+      tags: ['users', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user.
+        tests:
+          - not_null
+          - unique
+
+      - name: months_since_signup
+        description: Number of months since the user signed up.
+
+      - name: user_tenure_bucket
+        description: Tenure bucket classifying users based on months since signup.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['0-1 month', '1-6 months', '6-12 months', '12+ months']
+                quote: true
+
+      - name: is_new_user
+        description: Indicates whether the user is considered new based on tenure.
+
+      - name: is_long_term_user
+        description: Indicates whether the user is classified as a long-term user.
+
+      - name: is_active_user
+        description: Indicates whether the user is currently active.
+

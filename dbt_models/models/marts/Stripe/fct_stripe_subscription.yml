@@ -1,0 +1,84 @@
+
+models:
+  - name: fct_strip_subscription
+    description: >
+      Fact table containing Stripe subscription records, including subscription status,
+      billing periods, quantities, and lifecycle indicators.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      source_system: stripe
+      grain: one row per subscription_id
+      domain: billing
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: subscription_id
+        description: Unique identifier of the subscription in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer associated with the subscription.
+        tests:
+          - not_null
+          - relationships:
+              field: customer_id
+              to: ref('dim_stripe_customers')
+
+      - name: price_id
+        description: Unique identifier of the pricing plan applied to the subscription.
+        tests:
+          - not_null
+          - relationships:
+              field: price_id
+              to: ref('dim_stripe_product')
+
+      - name: quantity
+        description: Number of units subscribed under the pricing plan.
+
+      - name: status
+        description: Current status of the subscription (e.g., active, canceled, past_due).
+
+      - name: current_period_start
+        description: Start timestamp of the current subscription billing period.
+        tests:
+          - not_null
+
+      - name: current_period_end
+        description: End timestamp of the current subscription billing period.
+        tests:
+          - not_null
+
+      - name: current_period_remaining_days
+        description: Number of days remaining in the current billing period.
+
+      - name: current_period_remaining_months
+        description: Number of months remaining in the current billing period.
+
+      - name: is_active_subscription
+        description: Indicates whether the subscription is currently active.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: is_expired
+        description: Indicates whether the subscription has expired.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: created_date
+        description: Timestamp when the subscription was created in Stripe.
+        tests:
+          - not_null

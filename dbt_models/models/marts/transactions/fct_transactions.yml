@@ -1,0 +1,110 @@
+
+models:
+  - name: fct_transactions
+    description: >
+      Fact table containing one record per financial transaction, capturing
+      transaction details, monetary amounts, categorization, payment attributes,
+      and transaction status indicators.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per transaction_id
+      domain: transactions
+      tags: ['taransactions', 'marts']
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier of the financial transaction.
+        tests:
+          - not_null
+          - unique
+
+      - name: account_id
+        description: Unique identifier of the account associated with the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                field: account_id
+                to: ref('int_accounts')
+
+      - name: user_id
+        description: Unique identifier of the user who owns the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                field: user_id
+                to: ref('int_users')
+
+      - name: transaction_date
+        description: Date when the transaction was initiated.
+        tests:
+          - not_null
+
+      - name: post_date
+        description: Date when the transaction was posted to the account.
+
+      - name: amount
+        description: Signed transaction amount where debits are negative and credits are positive.
+        tests:
+          - not_null
+
+      - name: abs_amount
+        description: Absolute value of the transaction amount.
+        tests:
+          - not_null
+
+      - name: currency
+        description: ISO currency code representing the transaction currency.
+
+      - name: category
+        description: Categorization assigned to the transaction for reporting and analysis.
+
+      - name: merchant
+        description: Merchant or counterparty associated with the transaction.
+
+      - name: payment_channel
+        description: Channel through which the transaction was executed (e.g., card, ach, wire).
+
+      - name: transaction_status
+        description: Current status of the transaction (e.g., posted, pending, reversed).
+
+      - name: is_debit
+        description: Indicates whether the transaction is a debit.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: is_credit
+        description: Indicates whether the transaction is a credit.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: is_pending
+        description: Indicates whether the transaction is currently pending.
+
+      - name: is_verified
+        description: Indicates whether the transaction has been verified.
+
+      - name: is_manual
+        description: Indicates whether the transaction was manually entered.
+
+      - name: is_recurring
+        description: Indicates whether the transaction is part of a recurring series.
+      
+      - name: txt_src
+        description: Source system from which the transaction data originated.
+
+      - name: last_updated
+        description: Timestamp when the transaction record was last updated.

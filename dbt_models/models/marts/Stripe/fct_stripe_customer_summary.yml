@@ -1,0 +1,52 @@
+
+models:
+  - name: fct_stripe_customer_summary
+    description: >
+      Stripe customer–level financial summary combining successful payment activity
+      and invoice metrics, including revenue, invoiced amounts, outstanding balances,
+      and recency indicators.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      source_system: stripe
+      grain: one row per customer_id
+      domain: billing 
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: customer_id
+        description: Unique identifier of the customer in Stripe.
+        tests:
+          - not_null
+          - relationships:
+              field: customer_id
+              to: ref('dim_stripe_customers')
+
+      - name: total_payments
+        description: Total number of successful payments made by the customer.
+        tests:
+          - not_null
+
+      - name: total_revenue
+        description: Total revenue collected from successful customer payments.
+        tests:
+          - not_null
+
+      - name: avg_payment_amount
+        description: Average amount of successful payments made by the customer.
+
+      - name: last_payment_date
+        description: Most recent date when a successful payment was made by the customer.
+
+      - name: total_invoices
+        description: Total number of invoices generated for the customer.
+
+      - name: total_invoiced_amount
+        description: Total monetary amount invoiced to the customer.
+
+      - name: outstanding_amount
+        description: Total amount currently outstanding on open invoices.
+
+      - name: last_invoice_date
+        description: Most recent date when an invoice was created for the customer.

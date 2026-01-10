@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: fct_account_balance
+    description: >
+      Fact table containing account-level balance snapshots and credit metrics,
+      used for financial analysis, risk monitoring, and balance trend reporting.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per account_id per balance_date
+      domain: account
+      tags: ['accounts', 'mart', 'balance']
+
+    columns:
+      - name: account_id
+        description: Unique identifier of the account.
+        tests:
+          - not_null
+          - unique
+
+      - name: current_balance
+        description: Current posted balance of the account at the time of snapshot.
+
+      - name: available_balance
+        description: Available balance that can be used for spending or withdrawal.
+
+      - name: available_credit
+        description: Remaining credit available on credit-based accounts.
+
+      - name: balance_diffrence
+        description: Difference between current balance and available balance.
+
+      - name: currency
+        description: ISO currency code representing the account balance currency.
+
+      - name: balance_date
+        description: Date on which the account balance snapshot was recorded.
+
+      - name: days_since_balance_check
+        description: Number of days since the account balance was last refreshed.
+
+      - name: credit_utilization_ratio
+        description: Ratio of used credit to total available credit for the account.
+
+      - name: is_overdrawn
+        description: Indicates whether the account balance is below zero.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - TRUE
+                  - FALSE
+
+      - name: is_high_utilization
+        description: Indicates whether credit utilization exceeds the defined threshold.
+        tests:
+          - accepted_values:
+              arguments:
+                values: 
+                  - TRUE
+                  - FALSE

@@ -1,0 +1,60 @@
+
+models:
+  - name: fct_stripe_invoice
+    description: >
+      Fact table containing Stripe invoice records, including invoice amounts,
+      currency, status, and invoice lifecycle metrics.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      source_system: stripe
+      grain: one row per invoice_id
+      domain: billing 
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: invoice_id
+        description: Unique identifier of the invoice in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer associated with the invoice.
+        tests:
+          - not_null
+          - relationships:
+              field: customer_id
+              to: ref('dim_stripe_customers')
+
+      - name: subscription_id
+        description: Unique identifier of the subscription linked to the invoice.
+        tests:
+          - not_null
+          - relationships:
+              field: subscription_id
+              to: ref('fct_stripe_subscription')
+
+      - name: amount
+        description: Total amount billed on the invoice.
+        tests:
+          - not_null
+
+      - name: currency
+        description: ISO currency code for the invoice amount.
+
+      - name: status
+        description: Current status of the invoice (e.g., open, paid, void, uncollectible).
+
+      - name: created_date
+        description: Timestamp when the invoice was created in Stripe.
+        tests:
+          - not_null
+
+      - name: days_since_created
+        description: Number of days since the invoice was created.
+
+      - name: months_since_created
+        description: Number of months since the invoice was created.
+

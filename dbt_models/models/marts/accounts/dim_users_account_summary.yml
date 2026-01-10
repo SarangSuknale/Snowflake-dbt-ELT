@@ -1,0 +1,70 @@
+
+models:
+  - name: dim_users_account_summary
+    description: >
+      User-level aggregation table providing account counts, lifecycle metrics,
+      balance summaries, and financial health indicators derived from all accounts
+      owned by a user.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      grain: one row per user_id
+      domain: account 
+      tags: ['accounts', 'users', 'marts']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user who owns the accounts.
+        tests:
+          - not_null
+          - unique
+
+      - name: first_account_added_date
+        description: Earliest date when a user added an account.
+        tests:
+          - not_null
+
+      - name: last_account_added_date
+        description: Most recent date when a user added an account.
+        tests:
+          - not_null
+
+      - name: total_accounts
+        description: Total number of accounts owned by the user.
+        tests:
+          - not_null
+
+      - name: active_accounts
+        description: Number of active accounts owned by the user.
+
+      - name: inactive_accounts
+        description: Number of inactive accounts owned by the user.
+
+      - name: accounts_in_error
+        description: Number of user accounts currently in error status.
+
+      - name: pending_accounts
+        description: Number of user accounts currently in pending status.
+
+      - name: avg_account_age_in_days
+        description: Average age of user accounts measured in days.
+        tests:
+          - not_null
+
+      - name: avg_account_age_in_months
+        description: Average age of user accounts measured in months.
+        tests:
+          - not_null
+
+      - name: total_assets
+        description: Total balance of asset accounts such as checking and savings.
+
+      - name: total_liabilities
+        description: Total balance of liability accounts such as credit cards and loans.
+
+      - name: net_worth
+        description: Net worth calculated as total assets minus total liabilities.
+
+      - name: avg_credit_utilization_ratio
+        description: Average credit utilization ratio across all user credit accounts.

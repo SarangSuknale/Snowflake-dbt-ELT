@@ -1,0 +1,51 @@
+
+models:
+  - name: dim_stripe_customers
+    description: >
+      Dimension table containing Stripe customer records mapped to internal users,
+      including identity, contact information, and customer lifecycle metrics.
+
+    meta:
+      owner: Sarang 
+      layer: mart
+      source_system: stripe
+      grain: one row per customer_id
+      domain: billing
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: customer_id
+        description: Unique identifier of the customer in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Unique identifier of the internal user linked to the Stripe customer.
+        tests:
+          - not_null
+          - relationships:
+              field: user_id
+              to: ref('int_users')
+
+      - name: email
+        description: Email address associated with the Stripe customer.
+        tests:
+          - not_null
+
+      - name: name
+        description: Full name of the Stripe customer.
+        tests:
+          - not_null
+
+      - name: created_date
+        description: Timestamp when the Stripe customer was created.
+        tests:
+          - not_null
+
+      - name: days_since_created
+        description: Number of days since the Stripe customer record was created.
+
+      - name: months_since_created
+        description: Number of months since the Stripe customer record was created.
+

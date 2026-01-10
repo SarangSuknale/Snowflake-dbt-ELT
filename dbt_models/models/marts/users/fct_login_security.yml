@@ -1,0 +1,57 @@
+
+models:
+  - name: fct_login_security
+    description: >
+      User-level login and security metrics capturing IP, location,
+      device, and browser diversity, as well as session duration,
+      used for fraud detection and account security monitoring.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per user_id
+      domain: users 
+      tags: ['users', 'marts', 'login']
+
+    columns:
+      - name: user_id
+        description: Unique identifier of the user whose login activity is measured.
+        tests:
+          - not_null
+          - unique
+
+      - name: unique_ip_count
+        description: Number of distinct IP addresses used by the user.
+
+      - name: unique_location_count
+        description: Number of distinct login locations used by the user.
+
+      - name: multiple_ip_flag
+        description: Flag indicating whether the user has logged in from more than 5 IP addresses.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: possible_account_sharing
+        description: Flag indicating potential account sharing (logins from more than 3 locations).
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE
+
+      - name: unique_device_count
+        description: Number of distinct device types used by the user for login.
+
+      - name: unique_browser_count
+        description: Number of distinct browsers used by the user for login.
+
+      - name: avg_session_duration_minutes
+        description: Average session duration of the user in minutes.
+

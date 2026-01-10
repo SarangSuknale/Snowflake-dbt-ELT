@@ -1,0 +1,76 @@
+
+models:
+  - name: fct_login_sessions
+    description: >
+      Fact table capturing user login events, including session timing, IPs, 
+      device and browser details, and session success indicators.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per login_id
+      domain: users 
+      tags: ['users','marts', 'login']
+
+    columns:
+      - name: login_id
+        description: Unique identifier of the login session.
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Unique identifier of the user who initiated the login.
+        tests:
+          - not_null
+          - relationships:
+              field: user_id
+              to: ref('int_users')
+
+      - name: login_time
+        description: Timestamp when the login session started.
+        tests:
+          - not_null
+
+      - name: logout_time
+        description: Timestamp when the login session ended.
+        tests:
+          - not_null
+
+      - name: session_duration_seconds
+        description: Duration of the login session in seconds.
+        tests:
+          - not_null
+
+      - name: session_duration_minutes
+        description: Duration of the login session in minutes.
+        tests:
+          - not_null
+
+      - name: login_ip_address
+        description: IP address used for the login session.
+
+      - name: login_local_ip_address
+        description: Local network IP address used during the login session.
+
+      - name: login_public_ip_address
+        description: Public network IP address used during the login session.
+
+      - name: login_location
+        description: Geographic location inferred from the login IP.
+        tests:
+          - not_null
+
+      - name: device_type
+        description: Type of device used for the login (e.g., mobile, desktop, tablet).
+        tests:
+          - not_null
+
+      - name: browser_type
+        description: Browser used for the login session.
+        tests:
+          - not_null
+
+      - name: is_successfull_session
+        description: Indicates whether the session ended with a proper logout.
+

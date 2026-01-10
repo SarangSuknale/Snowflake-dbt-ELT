@@ -1,0 +1,92 @@
+
+models:
+  - name: fct_stripe_payments
+    description: >
+      Fact table containing Stripe payment transactions, including payment amounts,
+      currency, status, payment success indicators, payment method details,
+      and payment lifecycle metrics.
+
+    meta:
+      owner: Sarang
+      layer: mart
+      source_system: stripe
+      grain: one row per payment_id
+      domain: billing 
+      tags: ['stripe', 'marts']
+
+    columns:
+      - name: payment_id
+        description: Unique identifier of the payment transaction in Stripe.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Unique identifier of the Stripe customer who made the payment.
+        tests:
+          - not_null
+          - relationships:
+              field: customer_id
+              to: ref('dim_stripe_customers')
+
+      - name: amount
+        description: Amount charged in the payment transaction.
+        tests:
+          - not_null
+
+      - name: currency
+        description: ISO currency code of the payment amount.
+
+      - name: status
+        description: Current status of the payment (e.g., succeeded, failed, pending).
+
+      - name: is_successful_payment
+        description: Indicates whether the payment was successfully completed.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TRUE 
+                  - FALSE 
+
+      - name: payment_made_date
+        description: Timestamp when the payment was processed.
+        tests:
+          - not_null
+
+      - name: days_since_payment
+        description: Number of days since the payment was made.
+
+      - name: months_since_payment
+        description: Number of months since the payment was made.
+
+      - name: payment_method_type
+        description: Type of payment method used (e.g., card, bank_transfer).
+ 
+      - name: card_brand
+        description: Brand of the payment card used for the transaction.
+
+      - name: card_last_four_digit
+        description: Last four digits of the payment card.
+
+      - name: exp_month
+        description: Expiration month of the payment card.
+        tests:
+          - not_null
+
+      - name: exp_year
+        description: Expiration year of the payment card.
+        tests:
+          - not_null
+
+      - name: card_added_date
+        description: Date when the payment card was added to the customer account.
+        tests:
+          - not_null
+
+      - name: days_since_card_added
+        description: Number of days since the payment card was added.
+
+      - name: months_since_card_added
+        description: Number of months since the payment card was added.

@@ -1,0 +1,54 @@
+
+models:
+  - name: fct_alert_metrics
+    description: >
+      Daily aggregated alert metrics by delivery channel, providing alert volume,
+      delivery outcomes, and success and failure rates.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per alert_date per channel
+      domain: alert 
+      tags: ['alerts', 'marts']
+
+    columns:
+      - name: alert_date
+        description: Date on which alerts were sent, truncated to day level.
+        tests:
+          - not_null
+
+      - name: channel
+        description: Delivery channel used to send the alert (e.g., email, sms, push).
+        tests:
+          - not_null
+
+      - name: total_alerts
+        description: Total number of alerts sent for the given date and channel.
+        tests:
+          - not_null
+
+      - name: total_success
+        description: Number of alerts successfully delivered.
+        tests:
+          - not_null
+
+      - name: success_rate
+        description: Ratio of successfully delivered alerts to total alerts.
+        tests:
+          - not_null
+
+      - name: total_failed
+        description: Number of alerts that failed to deliver.
+        tests:
+          - not_null
+
+      - name: failed_rate
+        description: Ratio of failed alerts to total alerts.
+
+      - name: total_pending
+        description: Number of alerts currently in pending state.
+
+      - name: pending_rate
+        description: Ratio of pending alerts to total alerts.
+

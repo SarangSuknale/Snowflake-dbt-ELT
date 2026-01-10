@@ -1,0 +1,50 @@
+
+models:
+  - name: fct_account_source
+    description: >
+      Aggregated metrics by account source showing account volume,
+      status distribution, and data freshness across providers.
+
+    meta:
+      owner: analytics
+      layer: mart
+      grain: one row per account_src
+      domain: account
+      tags: ['accounts', 'marts']
+
+    columns:
+      - name: account_src
+        description: Source system or provider from which the account data originates.
+        tests:
+          - not_null
+          - unique
+
+      - name: total_accounts
+        description: Total number of accounts from the source.
+        tests:
+          - not_null
+
+      - name: active_accounts
+        description: Number of active accounts from the source.
+        tests:
+          - not_null
+
+      - name: inactive_accounts
+        description: Number of inactive accounts from the source.
+        tests:
+          - not_null
+
+      - name: accounts_in_error
+        description: Number of accounts from the source currently in error status.
+        tests:
+          - not_null
+
+      - name: pending_accounts
+        description: Number of accounts from the source currently in pending status.
+        tests:
+          - not_null
+
+      - name: stale_accounts
+        description: Number of accounts from the source marked as having stale data.
+        tests:
+          - not_null
