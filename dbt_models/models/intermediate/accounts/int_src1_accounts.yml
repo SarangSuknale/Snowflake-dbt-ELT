@@ -8,17 +8,16 @@ models:
                 account owned by a user and is designed to support downstream analytics
                 related to account monitoring, credit usage, and data freshness.
 
-    tags:
-      - finicity
-      - accounts
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: accounts
       source_system: finicity
       maturity: intermediate
       pii: false
+      tags:
+      - finicity
+      - accounts
+      - intermediate
 
     columns:
       - name: account_id

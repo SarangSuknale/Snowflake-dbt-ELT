@@ -9,11 +9,6 @@ models:
               Each row represents one financial account owned by a user and is designed
               to serve as the foundation for downstream account-level marts and reporting.
 
-    tags:
-      - accounts
-      - intermediate
-      - unified
-
     meta:
       owner: Sarang Suknale
       domain: accounts
@@ -24,6 +19,10 @@ models:
         - Source 1
         - Source 2
         - Source 3
+      tags:
+        - accounts
+        - intermediate
+        - unified
 
     columns:
       - name: account_id

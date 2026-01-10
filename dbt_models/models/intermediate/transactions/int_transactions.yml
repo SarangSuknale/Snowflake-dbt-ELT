@@ -8,11 +8,6 @@ models:
               transaction marts, reporting, and analytics.
               Each row represents a single financial transaction linked to a user account.
 
-    tags:
-      - transactions
-      - intermediate
-      - unified
-
     meta:
       owner: Sarang Suknale
       domain: transactions
@@ -23,6 +18,10 @@ models:
         - finicity
         - plaid
         - yodlee
+      tags:
+        - transactions
+        - intermediate
+        - unified
 
     columns:
       - name: transaction_id

@@ -9,17 +9,16 @@ models:
             timing attributes, and associated card metadata to support revenue,
             payment success analysis, and billing operations.
 
-    tags:
-      - stripe
-      - payments
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: billing
       source_system: stripe
       maturity: intermediate
       pii: true
+      tags:
+      - stripe
+      - payments
+      - intermediate
 
     columns:
       - name: payment_id

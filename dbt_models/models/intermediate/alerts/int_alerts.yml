@@ -8,18 +8,17 @@ models:
           and derives success, pending, and failure indicators to support alert
           monitoring, engagement analysis, and operational reporting.
 
-    tags:
-      - alerts
-      - intermediate
-      - text alerts
-      - email alerts
-
     meta:
       owner: Sarang Suknale
       domain: alerts
       source_system: MySQL
       maturity: intermediate
       pii: true
+      tags:
+        - alerts
+        - intermediate
+        - text alerts
+        - email alerts
 
     columns:
       - name: id

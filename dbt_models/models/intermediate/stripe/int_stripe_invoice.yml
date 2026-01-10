@@ -9,17 +9,16 @@ models:
             and timing attributes to support billing, revenue, and subscription
             analytics.
 
-    tags:
-      - stripe
-      - invoices
-      - intermediate
-
     meta:
       owner: Sarang Suknale
       domain: billing
       source_system: stripe
       maturity: intermediate
       pii: false
+      tags:
+      - stripe
+      - invoices
+      - intermediate
 
     columns:
       - name: invoice_id

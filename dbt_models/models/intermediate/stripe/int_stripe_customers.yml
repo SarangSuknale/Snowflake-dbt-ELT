@@ -7,17 +7,16 @@ models:
                 customer and includes creation timing information to support customer
                 tenure analysis, billing analytics, and user-to-customer linkage.
 
-    tags:
-      - stripe
-      - customers
-      - intermediate
-
     meta:
       owner: data_platform
       domain: billing
       source_system: stripe
       maturity: intermediate
       pii: true
+      tags:
+      - stripe
+      - customers
+      - intermediate
 
     columns:
       - name: customer_id

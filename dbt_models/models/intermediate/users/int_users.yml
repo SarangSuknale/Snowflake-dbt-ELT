@@ -8,17 +8,16 @@ models:
             membership days, and churn indicators. This model serves as the canonical
             user dimension for downstream analytics and reporting.
 
-    tags:
-      - users
-      - intermediate
-      - dimension
-
     meta:
       owner: Sarang Suknale
       domain: users
       source_system: mysql
       maturity: intermediate
       pii: true
+      tags:
+        - users
+        - intermediate
+        - dimension
 
     columns:
       - name: user_id
