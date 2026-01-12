@@ -1,0 +1,5 @@
+bucket_name,min_days,max_days,sort_order
+0-7_days,0,7,1
+8-30_days,8,30,2
+31-90_days,31,90,3
+90+,91,9999,4
