@@ -12,6 +12,16 @@ models:
       grain: one row per user_id
       domain: users 
       tags: ['users', 'marts']
+    
+    tests:
+      - date_order:
+          arguments:
+            start_column: membership_start
+            end_column: membership_end
+      - date_order:
+          arguments:
+            start_column: trial_start
+            end_column: trial_end
 
     columns:
       - name: user_id

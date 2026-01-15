@@ -31,6 +31,7 @@ models:
         description: Timestamp when the login session started.
         tests:
           - not_null
+          - no_future_date
 
       - name: logout_time
         description: Timestamp when the login session ended.
