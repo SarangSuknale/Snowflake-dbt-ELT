@@ -1,0 +1,7 @@
+metric_name,min_value,max_value,risk_level
+balance,-999999,-1,negative_balance
+balance,0,100,low_balance
+balance,100,1000000,healthy_balance
+credit_utilization_ratio,0,0.3,low_risk
+credit_utilization_ratio,0.3,0.7,medium_risk
+credit_utilization_ratio,0.7,1.0,high_risk

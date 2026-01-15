@@ -85,6 +85,11 @@ models:
         description: Ratio of used credit to total available credit for the account.
                      Calculated using the most relevant balance and credit fields
                      across providers.
+        tests:
+          - range_between:
+              arguments:
+                min_value: 0
+                max_value: 1
 
       - name: currency
         description: Currency code in which the account balances are recorded.

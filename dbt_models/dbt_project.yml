@@ -43,3 +43,11 @@ models:
     marts:
       +schema: mart
       +materialized: table
+      +persist_docs:
+          relation: true
+          columns: true
+
+seeds: 
+  dbt_models:
+    +schema: static_data
+    +quote_columns: false # Recommended for Snowflake to avoid case-sensitivity issues
