@@ -1,4 +1,11 @@
 
+{{
+    config(
+        materialized='view'
+    )
+}}
+
+
 with accounts as (
     {{
     dbt_utils.union_relations(

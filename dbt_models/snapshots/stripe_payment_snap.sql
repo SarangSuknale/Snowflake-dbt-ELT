@@ -5,7 +5,8 @@
         target_schema = 'snapshots',
         unique_key = 'payment_id',
         strategy = 'check',
-        check_cols = ['status', 'payment_method_type', 'card_brand']
+        check_cols = ['status', 'payment_method_type', 'card_brand'],
+        invalidate_hard_deletes = true
     )
 }}
 

@@ -1,3 +1,4 @@
+
 with src2 as (
         select
             account_id,

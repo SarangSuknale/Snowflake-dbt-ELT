@@ -1,3 +1,4 @@
+
 with src2_txt as (
     select
           transaction_id,

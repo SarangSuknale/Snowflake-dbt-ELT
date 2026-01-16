@@ -1,3 +1,4 @@
+
 with src1 as (
     select
           transaction_id,

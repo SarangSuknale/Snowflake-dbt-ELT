@@ -5,7 +5,8 @@
         target_schema = 'snapshots',
         unique_key = 'user_id',
         strategy = 'check',
-        check_cols=['email','is_active','mobile_number','membership_plan','membership_status']
+        check_cols=['email','is_active','mobile_number','membership_plan','membership_status'],
+        invalidate_hard_deletes = true
     )
 }}
 

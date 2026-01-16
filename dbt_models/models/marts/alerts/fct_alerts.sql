@@ -1,3 +1,13 @@
+
+{{
+    config(
+        materialized = 'incremental' if target.name == 'prod' else 'view',
+        incremental_strategy = 'merge',
+        unique_key = 'id',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with fct_alerts as (
     select
           id,
@@ -12,6 +22,12 @@ with fct_alerts as (
           is_failed,
           is_pending
     from {{ref('int_alerts')}}
+
+    {% if is_incremental() %}
+    where alert_sent_date >= 
+          (select dateadd('day', -5, max(alert_sent_date)) 
+          from {{this}})
+    {% endif %}
 )
 
-select * from fct_alerts
+select * from fct_alerts 
