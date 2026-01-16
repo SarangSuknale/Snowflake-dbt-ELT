@@ -1,4 +1,16 @@
 
+{{
+    config(
+        materialized = 'incremental' if target.name == 'prod' else 'view',
+        incremental_strategy='microbatch',
+        event_time='transaction_date',
+        batch_size='day',
+        lookback=5,
+        unique_key='transaction_id',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with fct_txt as (
     select
           transaction_id,

@@ -1,3 +1,12 @@
+
+{{
+    config(
+        materialized = 'incremental' if target.name == 'prod' else 'view',
+        incremental_strategy = 'append-only',
+        on_schema_change='sync_all_columns'
+    )
+}}
+
 with user_login as (
     select
           login_id,

@@ -1,3 +1,10 @@
+
+{{
+    config(
+        materialized='ephemeral'
+    )
+}}
+
 with src3_txt as (
     select
           transaction_id,

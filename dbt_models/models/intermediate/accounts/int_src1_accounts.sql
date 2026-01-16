@@ -1,3 +1,10 @@
+
+{{
+    config(
+        materialized='ephemeral'
+    )
+}}
+
 with src1 as (
     select 
           account_id,

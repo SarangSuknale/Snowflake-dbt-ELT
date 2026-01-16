@@ -5,7 +5,8 @@
         target_schema = 'snapshots',
         unique_key = 'customer_id',
         strategy = 'check',
-        check_cols = ['customer_id', 'email']
+        check_cols = ['customer_id', 'email'],
+        invalidate_hard_deletes = true
     )
 }}
 
