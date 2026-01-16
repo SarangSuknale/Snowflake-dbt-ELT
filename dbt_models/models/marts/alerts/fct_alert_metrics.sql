@@ -21,7 +21,9 @@ with alert_metric as (
           count_if(is_pending)::number(10,2) / count(id) as pending_rate
     from {{ref('int_alerts')}}
     {% if is_incremental() %}
-    where alert_date >= dateadd('day', -2, max(alert_date))
+    where alert_date >= 
+         (select dateadd('day', -2, max(alert_date)) 
+         from {{this}})
     {% endif %}
     group by alert_date, channel
 )

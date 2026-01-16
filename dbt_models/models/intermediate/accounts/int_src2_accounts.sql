@@ -1,10 +1,4 @@
 
-{{
-    config(
-        materialized='ephemeral'
-    )
-}}
-
 with src2 as (
         select
             account_id,

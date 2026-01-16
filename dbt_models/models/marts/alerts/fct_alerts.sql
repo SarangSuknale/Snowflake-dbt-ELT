@@ -24,7 +24,9 @@ with fct_alerts as (
     from {{ref('int_alerts')}}
 
     {% if is_incremental() %}
-    where alert_sent_date >= dateadd('day', -5, max(alert_sent_date))
+    where alert_sent_date >= 
+          (select dateadd('day', -5, max(alert_sent_date)) 
+          from {{this}})
     {% endif %}
 )
 

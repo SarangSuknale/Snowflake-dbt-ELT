@@ -42,7 +42,7 @@ models:
     
     marts:
       +schema: mart
-      +materialized: table
+      +materialized: "{{ 'table' if target.name == 'prod' else 'view' }}"
       +persist_docs:
           relation: true
           columns: true

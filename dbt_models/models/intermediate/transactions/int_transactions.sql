@@ -1,3 +1,11 @@
+
+{{
+  config(
+    materialized = 'view',
+    event_time = 'transaction_date'
+  )
+}}
+
 with txt as (
     {{
         dbt_utils.union_relations(
