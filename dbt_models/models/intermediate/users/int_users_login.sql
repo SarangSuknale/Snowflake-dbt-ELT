@@ -14,6 +14,16 @@ with users_login as (
           device_type,
           browser
     from {{ref('stg_users_login')}}
+),
+
+deduplicate_logins as (
+        {{
+            dbt_utils.deduplicate(
+                relation='users_login',
+                partition_by='login_id',
+                order_by='login_time desc',
+            )
+        }}
 )
 
-select * from users_login
+select * from deduplicate_logins

@@ -21,11 +21,11 @@ with fct_alerts as (
           is_success,
           is_failed,
           is_pending
-    from {{ref('int_alerts')}}
+    from {{ref('int_alerts')}} 
 
     {% if is_incremental() %}
     where alert_sent_date >= 
-          (select dateadd('day', -5, max(alert_sent_date)) 
+          (select dateadd('day', -15, max(alert_sent_date)) 
           from {{this}})
     {% endif %}
 )

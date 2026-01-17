@@ -31,4 +31,4 @@ with user_login as (
     {% endif %}
 )
 
-select * from user_login
+select * from user_login 

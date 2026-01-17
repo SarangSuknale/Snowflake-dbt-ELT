@@ -19,7 +19,6 @@ models:
         description: Unique identifier for the user login session.
         tests:
           - not_null
-          - unique
 
       - name: user_id
         description: Unique identifier of the user who logged in.

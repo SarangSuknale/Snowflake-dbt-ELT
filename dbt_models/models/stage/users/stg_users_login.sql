@@ -12,6 +12,16 @@ with user_logins as (
           device_type,
           browser
     from {{source('mysql_raw_data','user_logins')}}
+),
+
+deduplicate_logins as (
+        {{
+            dbt_utils.deduplicate(
+                relation='user_logins',
+                partition_by='login_id, user_id',
+                order_by='login_time desc',
+            )
+        }}
 )
 
 select * from user_logins

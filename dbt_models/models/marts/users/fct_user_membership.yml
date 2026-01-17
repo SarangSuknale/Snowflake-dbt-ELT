@@ -45,7 +45,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['trail', 'active', 'cancelled']
+                values: ['trial', 'active', 'cancelled']
                 quote: true
 
       - name: membership_start

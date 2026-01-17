@@ -118,6 +118,7 @@ models:
                 values:
                   - active
                   - cancelled
+                  - trial
 
       - name: email_alerts
         description: Indicates whether the user has enabled email alerts.

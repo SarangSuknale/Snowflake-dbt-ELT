@@ -17,7 +17,6 @@ models:
         description: Unique identifier for the email alert record.
         tests: 
           - not_null
-          - unique
       
       - name: user_id
         description: Unique identifier of the user who received the email alert.

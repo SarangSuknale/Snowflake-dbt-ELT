@@ -12,7 +12,7 @@ with email_alerts as (
           mail_subject as message_subject,
           mail_body as message_body,
           status
-    from {{ref('stg_email_alerts')}}
+    from {{ref('stg_email_alerts')}} 
 ),
 
 text_alerts as (
@@ -30,21 +30,36 @@ text_alerts as (
           message_body,
           status
     from {{ref('stg_text_alerts')}}
+),
+
+final as (
+
+      select 
+            *,
+            status = 'delivered' or status = 'bounced' as is_success,
+            status = 'queued' as is_pending,
+            status = 'failed' as is_failed
+
+      from email_alerts
+
+      union all
+
+      select
+            *,
+            status = 'delivered' as is_success,
+            status = 'pending' as is_pending,
+            status = 'failed' as is_failed
+      from text_alerts
+),
+
+deduplicate_alerts as (
+        {{
+            dbt_utils.deduplicate(
+                relation='final',
+                partition_by='id',
+                order_by='alert_sent_date desc',
+            )
+        }}
 )
 
-select 
-      *,
-      status = 'delivered' or status = 'bounced' as is_success,
-      status = 'queued' as is_pending,
-      status = 'failed' as is_failed
-
-from email_alerts
-
-union all
-
-select
-      *,
-      status = 'delivered' as is_success,
-      status = 'pending' as is_pending,
-      status = 'failed' as is_failed
-from text_alerts
+select * from deduplicate_alerts

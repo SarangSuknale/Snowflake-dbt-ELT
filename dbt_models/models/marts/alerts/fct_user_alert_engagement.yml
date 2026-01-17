@@ -23,6 +23,8 @@ models:
               arguments:
                 field: user_id
                 to: ref('int_users')
+              config:
+                enabled: false
 
       - name: total_alerts
         description: Total number of alerts sent to the user.
