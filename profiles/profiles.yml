@@ -1,0 +1,32 @@
+dbt_models:
+  target: test
+
+  outputs:
+
+    test:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE_TEST') }}"
+
+      database: dbt_db_test
+      schema: test
+
+      warehouse: dbt_test
+      threads: 5
+      client_session_keep_alive: false
+
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE_PROD') }}"
+
+      database: dbt_db_prod
+      schema: prod
+
+      warehouse: dbt_prod
+      threads: 8
+      client_session_keep_alive: false
