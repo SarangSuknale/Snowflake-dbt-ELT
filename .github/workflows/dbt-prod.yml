@@ -1,0 +1,58 @@
+name: dbt Production
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+
+  # Scheduled runs (example: every day at 02:00 UTC)
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  dbt-prod:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: dbt_models
+
+    env:
+      DBT_PROFILES_DIR: ../profiles
+      DBT_TARGET: prod
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Python setup
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Install dbt
+      - name: Install dbt
+        run: |
+          pip install --upgrade pip
+          pip install dbt-core dbt-snowflake
+
+      # Install dbt packages
+      - name: dbt deps
+        run: dbt deps
+
+      # Compile (early failure protection)
+      - name: dbt compile
+        run: dbt compile --target prod
+
+      # Build everything (seeds + snapshots + models + tests)
+      - name: dbt build
+        run: dbt build --target prod
+
+      # Upload manifest ONLY on success
+      - name: Upload dbt manifest
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-manifest
+          path: dbt_models/target/manifest.json

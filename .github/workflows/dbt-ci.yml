@@ -1,0 +1,58 @@
+name: dbt CI
+
+on:
+  pull_request:
+
+jobs:
+  dbt-ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: dbt_models
+
+    env:
+      DBT_PROFILES_DIR: ../profiles
+      DBT_TARGET: test
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Install dbt (adapter as needed)
+      - name: Install dbt
+        run: |
+          pip install --upgrade pip
+          pip install dbt-core dbt-snowflake
+
+      # Install packages
+      - name: dbt deps
+        run: dbt deps
+
+      # Download prod manifest (may not exist)
+      - name: Download dbt manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: dbt-manifest
+          path: dbt_models/state
+        continue-on-error: true
+
+      # Compile (early failure if config is wrong)
+      - name: dbt compile
+        run: dbt compile --target test
+
+      # Slim CI build (models + seeds + snapshots + tests)
+      - name: dbt build
+        run: |
+          dbt build \
+            --target test \
+            --select state:modified+ \
+            --state ./state \
+            --defer

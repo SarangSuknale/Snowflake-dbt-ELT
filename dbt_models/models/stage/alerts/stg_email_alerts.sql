@@ -10,7 +10,7 @@ with email_alerts as (
           message_id,
           mail_subject,
           mail_body,
-          status
+          status 
     from {{source('mysql_raw_data','email_alerts')}}
 )
 
