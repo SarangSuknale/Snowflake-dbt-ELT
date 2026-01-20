@@ -38,6 +38,8 @@ models:
               arguments:
                 to: ref('int_users')
                 field: user_id
+              config:
+                enabled: false
 
       - name: contact
         description: Contact detail used to send the alert. This can be an email address

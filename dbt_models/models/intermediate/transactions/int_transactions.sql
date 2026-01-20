@@ -18,7 +18,17 @@ with txt as (
     }}
 ),
 
-deduplicat_txt as (
+deduplicate_txt as (
+        {{
+            dbt_utils.deduplicate(
+                relation='txt',
+                partition_by='transaction_id',
+                order_by='last_updated desc',
+            )
+        }}
+),
+
+transactions as (
         select 
             transaction_id,
             account_id,
@@ -38,14 +48,14 @@ deduplicat_txt as (
             payment_channel,
             is_pending,
             txt_src
-        from txt
+        from deduplicate_txt
 ),
 
 txt_acc as (
     select 
           txt.* exclude(user_id),
           acc.user_id
-    from deduplicat_txt txt
+    from transactions txt
     inner join {{ref('int_accounts')}} acc
     on txt.account_id=acc.account_id
 )

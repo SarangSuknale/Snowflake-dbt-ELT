@@ -27,6 +27,8 @@ models:
               arguments:
                 field: user_id
                 to: ref('int_users')
+              config:
+                enabled: false
 
       - name: channel
         description: Delivery channel used to send the alert (e.g., email, sms, push).

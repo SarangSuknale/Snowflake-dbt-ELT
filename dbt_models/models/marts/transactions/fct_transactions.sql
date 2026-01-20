@@ -5,7 +5,7 @@
         incremental_strategy='microbatch',
         event_time='transaction_date',
         batch_size='day',
-        lookback=5,
+        lookback=30,
         begin = '2025-09-01',
         unique_key='transaction_id',
         on_schema_change='sync_all_columns'

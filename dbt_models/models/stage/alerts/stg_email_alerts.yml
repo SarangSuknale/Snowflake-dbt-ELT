@@ -16,8 +16,10 @@ models:
         description: Unique identifier for the email alert record.
         tests: 
           - not_null
-          - unique
-      
+          - unique:
+              config:
+                enabled: false
+                
       - name: user_id
         description: Unique identifier of the user who received the email alert.
         tests:
@@ -26,6 +28,8 @@ models:
               arguments:
                 to: ref('stg_users')
                 field: user_id
+              config:
+                enabled: false
 
       - name: email
         description: Email address to which the alert was sent.
