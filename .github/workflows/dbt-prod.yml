@@ -20,10 +20,10 @@ jobs:
       DBT_PROFILES_DIR: ../profiles
       DBT_TARGET: prod
 
-      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
-      user: "{{ env_var('SNOWFLAKE_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-      role: "{{ env_var('SNOWFLAKE_ROLE_PROD') }}"
+      account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      user: ${{ secrets.SNOWFLAKE_USER }}
+      password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      role: ${{ secrets.SNOWFLAKE_ROLE_PROD }}
       database: dbt_db_prod
       schema: prod
       warehouse: dbt_prod

@@ -15,10 +15,10 @@ jobs:
       DBT_PROFILES_DIR: ../profiles
       DBT_TARGET: test
 
-      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
-      user: "{{ env_var('SNOWFLAKE_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-      role: "{{ env_var('SNOWFLAKE_ROLE_TEST') }}"
+      account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      user: ${{ secrets.SNOWFLAKE_USER }}
+      password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      role: ${{ secrets.SNOWFLAKE_ROLE_TEST }}
       database: dbt_db_test
       schema: test
       warehouse: dbt_test
