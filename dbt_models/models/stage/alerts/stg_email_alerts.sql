@@ -9,7 +9,7 @@ with email_alerts as (
           frequency as alert_sent_frequency,
           message_id,
           mail_subject,
-          mail_body,
+          mail_body, 
           status
     from {{source('mysql_raw_data','email_alerts')}}
 )
