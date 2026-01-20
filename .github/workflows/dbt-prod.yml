@@ -20,13 +20,10 @@ jobs:
       DBT_PROFILES_DIR: ../profiles
       DBT_TARGET: prod
 
-      account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      user: ${{ secrets.SNOWFLAKE_USER }}
-      password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-      role: ${{ secrets.SNOWFLAKE_ROLE_PROD }}
-      database: dbt_db_prod
-      schema: prod
-      warehouse: dbt_prod
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_ROLE_PROD: ${{ secrets.SNOWFLAKE_ROLE_PROD }}
 
     steps:
       # Checkout repository
@@ -48,6 +45,12 @@ jobs:
       # Install dbt packages
       - name: dbt deps
         run: dbt deps
+      
+      # TEMP DEBUG STEP
+      - name: Debug env vars
+        run: |
+          echo "SNOWFLAKE_ACCOUNT is set"
+          echo "SNOWFLAKE_USER is set"
 
       # Compile (early failure protection)
       - name: dbt compile
