@@ -24,6 +24,6 @@ with dim_accounts as (
               else 'stale'
           end as freshness_bucket
     from {{ref('int_accounts')}}
-)
+) 
 
 select * from dim_accounts
