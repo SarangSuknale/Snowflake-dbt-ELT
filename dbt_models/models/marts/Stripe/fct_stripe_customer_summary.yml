@@ -20,8 +20,9 @@ models:
         tests:
           - not_null
           - relationships:
-              field: customer_id
-              to: ref('dim_stripe_customers')
+              arguments:
+                field: customer_id
+                to: ref('dim_stripe_customers')
 
       - name: total_payments
         description: Total number of successful payments made by the customer.

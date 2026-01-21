@@ -1,6 +1,6 @@
 
 models:
-  - name: fct_strip_subscription
+  - name: fct_stripe_subscription
     description: >
       Fact table containing Stripe subscription records, including subscription status,
       billing periods, quantities, and lifecycle indicators.
