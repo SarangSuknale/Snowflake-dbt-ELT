@@ -10,7 +10,7 @@
         unique_key='transaction_id',
         on_schema_change='sync_all_columns'
     )
-}}
+}} 
 
 with fct_txt as (
     select
