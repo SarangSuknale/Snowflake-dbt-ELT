@@ -29,7 +29,7 @@ models:
           - relationships:
               arguments:
                 field: user_id
-                to: ref('in_users')
+                to: ref('int_users')
 
       - name: account_number_last4
         description: Last four digits of the account number.

@@ -1,10 +1,21 @@
 
 {{
     config(
-        materialized = 'incremental' if target.name == 'prod' else 'view',
+        materialized = 'incremental' if target.name in ['prod', 'test'] else 'view',
         incremental_strategy = 'merge',
         unique_key = 'login_id',
-        on_schema_change='sync_all_columns'
+        on_schema_change='sync_all_columns',
+        post_hook = ([
+                "delete from {{ this }} "
+                "where login_time < ("
+                "  select dateadd("
+                "    month, -2, max(login_time)"
+                "  ) "
+                "  from {{ this }}"
+                ")"
+              ]
+                if target.name == 'test' else []
+            )
     )
 }}
 
@@ -24,11 +35,18 @@ with user_login as (
           browser as browser_type,
           logout_time is not null as is_successfull_session
     from {{ref('int_users_login')}}
-    {% if is_incremental() %}
+
+    {% if is_incremental() and target.name == 'prod' %}
     where login_time >= (
-          select dateadd(day, -5, max(login_time)) 
-          from {{ this }})
-    {% endif %}
+          select dateadd(day, -10, max(login_time)) 
+          from {{ this }}
+        )
+    {% elif is_incremental() and target.name == 'test' %}
+        where login_time >= (
+            select dateadd(day, -90, max(login_time)) 
+          from {{ this }}
+        )
+    {% endif %} 
 )
 
 select * from user_login 

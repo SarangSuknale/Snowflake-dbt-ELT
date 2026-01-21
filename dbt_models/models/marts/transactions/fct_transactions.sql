@@ -1,11 +1,11 @@
 
 {{
     config(
-        materialized = 'incremental' if target.name == 'prod' else 'view',
+        materialized = 'incremental' if target.name in ['prod', 'test'] else 'view',
         incremental_strategy='microbatch',
         event_time='transaction_date',
         batch_size='day',
-        lookback=30,
+        lookback=15,
         begin = '2025-09-01',
         unique_key='transaction_id',
         on_schema_change='sync_all_columns'
