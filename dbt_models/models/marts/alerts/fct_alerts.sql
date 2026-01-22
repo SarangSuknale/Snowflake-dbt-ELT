@@ -9,7 +9,7 @@
                 [
                     "delete from {{ this }} "
                     "where alert_sent_date < ("
-                    "  select dateadd(month, -2, coalesce(max(alert_sent_date), to_date('2020-01-01')))"
+                    "  select dateadd(month, -1, coalesce(max(alert_sent_date), to_date('2020-01-01')))"
                     "  from {{ this }}"
                     ")"
                 ]
@@ -35,7 +35,7 @@ with fct_alerts as (
 
      {% if is_incremental() and target.name == 'prod' %}
         where alert_sent_date >= (
-            select dateadd('day',-15, max(alert_sent_date))
+            select dateadd('day',-30, max(alert_sent_date))
             from {{ this }}
         )
       {% elif is_incremental() and target.name == 'test' %}

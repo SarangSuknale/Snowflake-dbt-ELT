@@ -9,7 +9,7 @@
                 "delete from {{ this }} "
                 "where login_time < ("
                 "  select dateadd("
-                "    month, -2, max(login_time)"
+                "    month, -1, max(login_time)"
                 "  ) "
                 "  from {{ this }}"
                 ")"
@@ -38,7 +38,7 @@ with user_login as (
 
     {% if is_incremental() and target.name == 'prod' %}
     where login_time >= (
-          select dateadd(day, -10, max(login_time)) 
+          select dateadd(day, -30, max(login_time)) 
           from {{ this }}
         )
     {% elif is_incremental() and target.name == 'test' %}
