@@ -23,8 +23,9 @@ models:
         tests:
           - not_null
           - relationships:
-              field: user_id
-              to: ref('int_users')
+              arguments:
+                field: user_id
+                to: ref('int_users')
 
       - name: login_time
         description: Timestamp when the login session started.
