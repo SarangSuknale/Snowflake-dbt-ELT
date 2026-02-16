@@ -42,8 +42,11 @@ with fct_txt as (
           txt_src,
           last_updated
     from {{ref('int_transactions')}}
-    {% if is_incremental() %}
-        where transaction_date >= dateadd(day, -10, max(transaction_date))
+     {% if is_incremental() %}
+        where transaction_date >= (
+            select dateadd(day, -10, max(transaction_date))
+            from {{ this }}
+        )
     {% endif %}
 )
 
