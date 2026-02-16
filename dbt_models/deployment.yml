@@ -10,7 +10,7 @@ jobs:
       - name: run models
         command: dbt run --target prod
       - name: test models 
-        command: dbt test -- target prod
+        command: dbt test --target prod
   - name: refresh specific models nightly
     schedule:
       type: cron
