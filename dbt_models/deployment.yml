@@ -1,5 +1,5 @@
 jobs:
-  - name: daily model runs
+  - name: daily dev model runs
     targetName: dev
     schedule:
       type: cron
@@ -8,22 +8,51 @@ jobs:
     retryOnFailure: true
     steps:
       - name: run models
-        command: dbt run --target prod
+        command: dbt run 
       - name: test models 
-        command: dbt test --target prod
+        command: dbt test 
+      
+  - name: daily test model runs
+    targetName: test
+    schedule:
+      type: cron
+      entries: ["0 12 * * *"]
+    timeout: 30m
+    retryOnFailure: true
+    steps:
+      - name: run models
+        command: dbt run 
+      - name: test models 
+        command: dbt test 
+  
+  - name: daily prod model runs
+    targetName: prod
+    schedule:
+      type: cron
+      entries: ["0 12 * * *"]
+    timeout: 30m
+    retryOnFailure: true
+    steps:
+      - name: run models
+        command: dbt run 
+      - name: test models 
+        command: dbt test 
+
   - name: refresh specific models nightly
+    targetName: prod
     schedule:
       type: cron
       entries: ["0 0 * * *"]
     steps:
       - name: run models
-        command: dbt run --target test
+        command: dbt run
   - name: connection-integrated-schedule
+    targetName: prod
     schedule:
       type: integrated
       integrations:
         - abject_normative
     steps:
       - name: run models
-        command: dbt run --target prod
+        command: dbt run
 
