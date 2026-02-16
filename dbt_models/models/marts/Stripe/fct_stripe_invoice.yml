@@ -25,16 +25,18 @@ models:
         tests:
           - not_null
           - relationships:
-              field: customer_id
-              to: ref('dim_stripe_customers')
+              arguments:
+                field: customer_id
+                to: ref('dim_stripe_customers')
 
       - name: subscription_id
         description: Unique identifier of the subscription linked to the invoice.
         tests:
           - not_null
           - relationships:
-              field: subscription_id
-              to: ref('fct_stripe_subscription')
+              arguments:
+                field: subscription_id
+                to: ref('fct_stripe_subscription')
 
       - name: amount
         description: Total amount billed on the invoice.
