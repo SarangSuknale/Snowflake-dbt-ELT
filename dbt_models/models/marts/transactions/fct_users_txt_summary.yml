@@ -20,8 +20,9 @@ models:
           - not_null
           - unique
           - relationships:
-              field: user_id
-              to: ref('int_users')
+              arguments:
+                field: user_id
+                to: ref('int_users')
 
       - name: total_transactions
         description: Total number of transactions associated with the user.
