@@ -26,8 +26,9 @@ models:
         tests:
           - not_null
           - relationships:
-              field: customer_id
-              to: ref('dim_stripe_customers')
+              arguments:
+                field: customer_id
+                to: ref('dim_stripe_customers')
 
       - name: amount
         description: Amount charged in the payment transaction.

@@ -1,16 +1,23 @@
 
 {{
     config(
-        materialized = 'incremental' if target.name in ['prod', 'test'] else 'view',
-        incremental_strategy='microbatch',
-        event_time='transaction_date',
-        batch_size='day',
-        lookback=10,
-        begin = '2025-09-01',
+        materialized= 'incremental' if target.name in ['prod', 'test'] else 'view',
+        incremental_strategy='merge',
         unique_key='transaction_id',
-        on_schema_change='sync_all_columns'
+        on_schema_change='sync_all_columns',
+        post_hook = ([
+                "delete from {{ this }} "
+                "where transaction_date < ("
+                "  select dateadd("
+                "    month, -1, max(transaction_date)"
+                "  ) "
+                "  from {{ this }}"
+                ")"
+              ]
+                if target.name == 'test' else []
+            )
     )
-}} 
+}}
 
 with fct_txt as (
     select
@@ -35,6 +42,9 @@ with fct_txt as (
           txt_src,
           last_updated
     from {{ref('int_transactions')}}
+    {% if is_incremental() %}
+        where transaction_date >= dateadd(day, -10, max(transaction_date))
+    {% endif %}
 )
 
 select * from fct_txt

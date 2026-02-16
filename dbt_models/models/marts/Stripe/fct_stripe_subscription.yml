@@ -25,16 +25,18 @@ models:
         tests:
           - not_null
           - relationships:
-              field: customer_id
-              to: ref('dim_stripe_customers')
+              arguments:
+                field: customer_id
+                to: ref('dim_stripe_customers')
 
       - name: price_id
         description: Unique identifier of the pricing plan applied to the subscription.
         tests:
           - not_null
           - relationships:
-              field: price_id
-              to: ref('dim_stripe_product')
+              arguments:
+                field: price_id
+                to: ref('dim_stripe_product')
 
       - name: quantity
         description: Number of units subscribed under the pricing plan.
