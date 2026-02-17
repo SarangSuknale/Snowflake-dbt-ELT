@@ -7,10 +7,8 @@ jobs:
     timeout: 30m
     retryOnFailure: true
     steps:
-      - name: run models
-        command: dbt run 
-      - name: test models 
-        command: dbt test 
+      - name: run models and tests
+        command: dbt build 
 
   - name: refresh specific models nightly
     targetName: prod
