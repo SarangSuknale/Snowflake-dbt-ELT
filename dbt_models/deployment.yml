@@ -24,8 +24,8 @@ jobs:
     schedule:
       type: integrated
       integrations:
-        - abject_normative
+        - join_fainted
     steps:
       - name: run models
-        command: dbt run
+        command: dbt build
 
